@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1567\\202309154007\\dotnetp\\dotnetp.Service\\dotnetp.Service.csproj": {}
+    "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1566\\202309152140\\dotnetp\\dotnetp.Service\\dotnetp.Service.csproj": {}
   },
   "projects": {
-    "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1567\\202309154007\\dotnetp\\dotnetp.DataAccess\\dotnetp.DataAccess.csproj": {
+    "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1566\\202309152140\\dotnetp\\dotnetp.DataAccess\\dotnetp.DataAccess.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1567\\202309154007\\dotnetp\\dotnetp.DataAccess\\dotnetp.DataAccess.csproj",
+        "projectUniqueName": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1566\\202309152140\\dotnetp\\dotnetp.DataAccess\\dotnetp.DataAccess.csproj",
         "projectName": "dotnetp.DataAccess",
-        "projectPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1567\\202309154007\\dotnetp\\dotnetp.DataAccess\\dotnetp.DataAccess.csproj",
+        "projectPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1566\\202309152140\\dotnetp\\dotnetp.DataAccess\\dotnetp.DataAccess.csproj",
         "packagesPath": "C:\\Users\\mmadipally\\.nuget\\packages\\",
-        "outputPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1567\\202309154007\\dotnetp\\dotnetp.DataAccess\\obj\\",
+        "outputPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1566\\202309152140\\dotnetp\\dotnetp.DataAccess\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\mmadipally\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -26,8 +26,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1567\\202309154007\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj": {
-                "projectPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1567\\202309154007\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj"
+              "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1566\\202309152140\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj": {
+                "projectPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1566\\202309152140\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj"
               }
             }
           }
@@ -67,14 +67,14 @@
         }
       }
     },
-    "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1567\\202309154007\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj": {
+    "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1566\\202309152140\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1567\\202309154007\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj",
+        "projectUniqueName": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1566\\202309152140\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj",
         "projectName": "dotnetp.DTO",
-        "projectPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1567\\202309154007\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj",
+        "projectPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1566\\202309152140\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj",
         "packagesPath": "C:\\Users\\mmadipally\\.nuget\\packages\\",
-        "outputPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1567\\202309154007\\dotnetp\\dotnetp.DTO\\obj\\",
+        "outputPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1566\\202309152140\\dotnetp\\dotnetp.DTO\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\mmadipally\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -120,14 +120,14 @@
         }
       }
     },
-    "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1567\\202309154007\\dotnetp\\dotnetp.Service\\dotnetp.Service.csproj": {
+    "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1566\\202309152140\\dotnetp\\dotnetp.Service\\dotnetp.Service.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1567\\202309154007\\dotnetp\\dotnetp.Service\\dotnetp.Service.csproj",
+        "projectUniqueName": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1566\\202309152140\\dotnetp\\dotnetp.Service\\dotnetp.Service.csproj",
         "projectName": "dotnetp.Service",
-        "projectPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1567\\202309154007\\dotnetp\\dotnetp.Service\\dotnetp.Service.csproj",
+        "projectPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1566\\202309152140\\dotnetp\\dotnetp.Service\\dotnetp.Service.csproj",
         "packagesPath": "C:\\Users\\mmadipally\\.nuget\\packages\\",
-        "outputPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1567\\202309154007\\dotnetp\\dotnetp.Service\\obj\\",
+        "outputPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1566\\202309152140\\dotnetp\\dotnetp.Service\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\mmadipally\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -142,11 +142,11 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1567\\202309154007\\dotnetp\\dotnetp.DataAccess\\dotnetp.DataAccess.csproj": {
-                "projectPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1567\\202309154007\\dotnetp\\dotnetp.DataAccess\\dotnetp.DataAccess.csproj"
+              "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1566\\202309152140\\dotnetp\\dotnetp.DataAccess\\dotnetp.DataAccess.csproj": {
+                "projectPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1566\\202309152140\\dotnetp\\dotnetp.DataAccess\\dotnetp.DataAccess.csproj"
               },
-              "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1567\\202309154007\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj": {
-                "projectPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1567\\202309154007\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj"
+              "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1566\\202309152140\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj": {
+                "projectPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1566\\202309152140\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj"
               }
             }
           }

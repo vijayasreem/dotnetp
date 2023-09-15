@@ -1,5 +1,4 @@
 ﻿
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using dotnetp.DTO;
 using dotnetp.Service;
@@ -11,9 +10,9 @@ namespace dotnetp.API
     [Route("api/[controller]")]
     public class GreetingController : ControllerBase
     {
-        private readonly IGreetingModelService _greetingService;
+        private readonly IGreetingService _greetingService;
 
-        public GreetingController(IGreetingModelService greetingService)
+        public GreetingController(IGreetingService greetingService)
         {
             _greetingService = greetingService;
         }
@@ -31,32 +30,28 @@ namespace dotnetp.API
             return greeting;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<GreetingModel>>> GetAllAsync()
-        {
-            var greetings = await _greetingService.GetAllAsync();
-            return greetings;
-        }
-
         [HttpPost]
-        public async Task<ActionResult<int>> AddAsync(GreetingModel greetingModel)
+        public async Task<IActionResult> CreateAsync(GreetingModel greeting)
         {
-            var id = await _greetingService.AddAsync(greetingModel);
-            return id;
+            await _greetingService.CreateAsync(greeting);
+
+            return Ok();
         }
 
         [HttpPut]
-        public async Task<ActionResult<bool>> UpdateAsync(GreetingModel greetingModel)
+        public async Task<IActionResult> UpdateAsync(GreetingModel greeting)
         {
-            var result = await _greetingService.UpdateAsync(greetingModel);
-            return result;
+            await _greetingService.UpdateAsync(greeting);
+
+            return Ok();
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<bool>> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-            var result = await _greetingService.DeleteAsync(id);
-            return result;
+            await _greetingService.DeleteAsync(id);
+
+            return Ok();
         }
     }
 }
