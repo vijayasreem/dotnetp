@@ -1,0 +1,15 @@
+C:\Amar\Application\20230911_Debug\Apps\1\1567\202309154007\dotnetp\dotnetp.DataAccess\bin\Debug\net7.0\dotnetp.DataAccess.deps.json
+C:\Amar\Application\20230911_Debug\Apps\1\1567\202309154007\dotnetp\dotnetp.DataAccess\bin\Debug\net7.0\dotnetp.DataAccess.dll
+C:\Amar\Application\20230911_Debug\Apps\1\1567\202309154007\dotnetp\dotnetp.DataAccess\bin\Debug\net7.0\dotnetp.DataAccess.pdb
+C:\Amar\Application\20230911_Debug\Apps\1\1567\202309154007\dotnetp\dotnetp.DataAccess\bin\Debug\net7.0\dotnetp.DTO.dll
+C:\Amar\Application\20230911_Debug\Apps\1\1567\202309154007\dotnetp\dotnetp.DataAccess\bin\Debug\net7.0\dotnetp.DTO.pdb
+C:\Amar\Application\20230911_Debug\Apps\1\1567\202309154007\dotnetp\dotnetp.DataAccess\obj\Debug\net7.0\dotnetp.DataAccess.csproj.AssemblyReference.cache
+C:\Amar\Application\20230911_Debug\Apps\1\1567\202309154007\dotnetp\dotnetp.DataAccess\obj\Debug\net7.0\dotnetp.DataAccess.GeneratedMSBuildEditorConfig.editorconfig
+C:\Amar\Application\20230911_Debug\Apps\1\1567\202309154007\dotnetp\dotnetp.DataAccess\obj\Debug\net7.0\dotnetp.DataAccess.AssemblyInfoInputs.cache
+C:\Amar\Application\20230911_Debug\Apps\1\1567\202309154007\dotnetp\dotnetp.DataAccess\obj\Debug\net7.0\dotnetp.DataAccess.AssemblyInfo.cs
+C:\Amar\Application\20230911_Debug\Apps\1\1567\202309154007\dotnetp\dotnetp.DataAccess\obj\Debug\net7.0\dotnetp.DataAccess.csproj.CoreCompileInputs.cache
+C:\Amar\Application\20230911_Debug\Apps\1\1567\202309154007\dotnetp\dotnetp.DataAccess\obj\Debug\net7.0\dotnetp.DataAccess.csproj.CopyComplete
+C:\Amar\Application\20230911_Debug\Apps\1\1567\202309154007\dotnetp\dotnetp.DataAccess\obj\Debug\net7.0\dotnetp.DataAccess.dll
+C:\Amar\Application\20230911_Debug\Apps\1\1567\202309154007\dotnetp\dotnetp.DataAccess\obj\Debug\net7.0\refint\dotnetp.DataAccess.dll
+C:\Amar\Application\20230911_Debug\Apps\1\1567\202309154007\dotnetp\dotnetp.DataAccess\obj\Debug\net7.0\dotnetp.DataAccess.pdb
+C:\Amar\Application\20230911_Debug\Apps\1\1567\202309154007\dotnetp\dotnetp.DataAccess\obj\Debug\net7.0\ref\dotnetp.DataAccess.dll
