@@ -1,10 +1,8 @@
-﻿using System;
+﻿using dotnetp.DTO;
+using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
-using dotnetp.DTO;
-using Dapper;
 
 namespace dotnetp
 {
@@ -17,50 +15,110 @@ namespace dotnetp
             _connectionString = connectionString;
         }
 
-        public async Task<IEnumerable<CreditCardModel>> GetAllAsync()
+        public async Task<int> CreateAsync(CreditCardModel creditCard)
         {
-            using (IDbConnection connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
-                string sql = "SELECT * FROM CreditCards";
-                return await connection.QueryAsync<CreditCardModel>(sql);
+                await connection.OpenAsync();
+
+                var command = new SqlCommand("INSERT INTO CreditCards (CardNumber, CVV, EPayment) VALUES (@CardNumber, @CVV, @EPayment); SELECT SCOPE_IDENTITY();", connection);
+
+                command.Parameters.AddWithValue("@CardNumber", creditCard.CardNumber);
+                command.Parameters.AddWithValue("@CVV", creditCard.CVV);
+                command.Parameters.AddWithValue("@EPayment", creditCard.EPayment);
+
+                var id = await command.ExecuteScalarAsync();
+
+                return Convert.ToInt32(id);
             }
         }
 
         public async Task<CreditCardModel> GetByIdAsync(int id)
         {
-            using (IDbConnection connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
-                string sql = "SELECT * FROM CreditCards WHERE Id = @Id";
-                return await connection.QuerySingleOrDefaultAsync<CreditCardModel>(sql, new { Id = id });
+                await connection.OpenAsync();
+
+                var command = new SqlCommand("SELECT * FROM CreditCards WHERE Id = @Id;", connection);
+                command.Parameters.AddWithValue("@Id", id);
+
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    if (await reader.ReadAsync())
+                    {
+                        var creditCard = new CreditCardModel
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            CardNumber = Convert.ToString(reader["CardNumber"]),
+                            CVV = Convert.ToString(reader["CVV"]),
+                            EPayment = Convert.ToString(reader["EPayment"])
+                        };
+
+                        return creditCard;
+                    }
+
+                    return null;
+                }
             }
         }
 
-        public async Task<int> CreateAsync(CreditCardModel creditCard)
+        public async Task<List<CreditCardModel>> GetAllAsync()
         {
-            using (IDbConnection connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
-                string sql = "INSERT INTO CreditCards (CardNumber, CVV, EPayment) VALUES (@CardNumber, @CVV, @EPayment); SELECT CAST(SCOPE_IDENTITY() as int)";
-                return await connection.ExecuteScalarAsync<int>(sql, creditCard);
+                await connection.OpenAsync();
+
+                var command = new SqlCommand("SELECT * FROM CreditCards;", connection);
+
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    var creditCards = new List<CreditCardModel>();
+
+                    while (await reader.ReadAsync())
+                    {
+                        var creditCard = new CreditCardModel
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            CardNumber = Convert.ToString(reader["CardNumber"]),
+                            CVV = Convert.ToString(reader["CVV"]),
+                            EPayment = Convert.ToString(reader["EPayment"])
+                        };
+
+                        creditCards.Add(creditCard);
+                    }
+
+                    return creditCards;
+                }
             }
         }
 
-        public async Task<bool> UpdateAsync(CreditCardModel creditCard)
+        public async Task UpdateAsync(CreditCardModel creditCard)
         {
-            using (IDbConnection connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
-                string sql = "UPDATE CreditCards SET CardNumber = @CardNumber, CVV = @CVV, EPayment = @EPayment WHERE Id = @Id";
-                int rowsAffected = await connection.ExecuteAsync(sql, creditCard);
-                return rowsAffected > 0;
+                await connection.OpenAsync();
+
+                var command = new SqlCommand("UPDATE CreditCards SET CardNumber = @CardNumber, CVV = @CVV, EPayment = @EPayment WHERE Id = @Id;", connection);
+
+                command.Parameters.AddWithValue("@Id", creditCard.Id);
+                command.Parameters.AddWithValue("@CardNumber", creditCard.CardNumber);
+                command.Parameters.AddWithValue("@CVV", creditCard.CVV);
+                command.Parameters.AddWithValue("@EPayment", creditCard.EPayment);
+
+                await command.ExecuteNonQueryAsync();
             }
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            using (IDbConnection connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
-                string sql = "DELETE FROM CreditCards WHERE Id = @Id";
-                int rowsAffected = await connection.ExecuteAsync(sql, new { Id = id });
-                return rowsAffected > 0;
+                await connection.OpenAsync();
+
+                var command = new SqlCommand("DELETE FROM CreditCards WHERE Id = @Id;", connection);
+                command.Parameters.AddWithValue("@Id", id);
+
+                await command.ExecuteNonQueryAsync();
             }
         }
     }

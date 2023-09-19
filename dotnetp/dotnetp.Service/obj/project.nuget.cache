@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "O7p0tfPuTv1alq2qL9SENkj5QxxiTHvC2u788rblDxjOu619/67+y35hb1yCLFGB7TDu2rRXSPrAqHJMdBT6Xg==",
+  "dgSpecHash": "moRFrv11DTomVTyPoeETyb9w7lgCMzgsKPDN1zuuXq+t43/PkdChj0ftduxLem9yQ5ZykbL/VgyrWzibvJ5Tzg==",
   "success": true,
-  "projectFilePath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1556\\202309195945\\dotnetp\\dotnetp.Service\\dotnetp.Service.csproj",
+  "projectFilePath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1574\\202309195303\\dotnetp\\dotnetp.Service\\dotnetp.Service.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mmadipally\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
     "C:\\Users\\mmadipally\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",

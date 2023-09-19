@@ -1,42 +1,69 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using dotnetp.DataAccess;
+﻿using dotnetp.DataAccess;
 using dotnetp.DTO;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace dotnetp.Service
 {
-    public class CreditCardService : ICreditCardService
+    public class CreditCardService : ICreditCardRepository
     {
-        private readonly ICreditCardRepository _creditCardRepository;
+        private readonly IDataAccess _dataAccess;
 
-        public CreditCardService(ICreditCardRepository creditCardRepository)
+        public CreditCardService(IDataAccess dataAccess)
         {
-            _creditCardRepository = creditCardRepository;
-        }
-
-        public async Task<IEnumerable<CreditCardModel>> GetAllAsync()
-        {
-            return await _creditCardRepository.GetAllAsync();
-        }
-
-        public async Task<CreditCardModel> GetByIdAsync(int id)
-        {
-            return await _creditCardRepository.GetByIdAsync(id);
+            _dataAccess = dataAccess;
         }
 
         public async Task<int> CreateAsync(CreditCardModel creditCard)
         {
-            return await _creditCardRepository.CreateAsync(creditCard);
+            // Encrypt customer data before storing it
+            creditCard.Encrypt();
+
+            // Call the data access layer to create the credit card
+            return await _dataAccess.CreateAsync(creditCard);
         }
 
-        public async Task<bool> UpdateAsync(CreditCardModel creditCard)
+        public async Task<CreditCardModel> GetByIdAsync(int id)
         {
-            return await _creditCardRepository.UpdateAsync(creditCard);
+            // Call the data access layer to get the credit card by id
+            var creditCard = await _dataAccess.GetByIdAsync(id);
+
+            if (creditCard != null)
+            {
+                // Decrypt the customer data after retrieving it
+                creditCard.Decrypt();
+            }
+
+            return creditCard;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<List<CreditCardModel>> GetAllAsync()
         {
-            return await _creditCardRepository.DeleteAsync(id);
+            // Call the data access layer to get all credit cards
+            var creditCards = await _dataAccess.GetAllAsync();
+
+            foreach (var creditCard in creditCards)
+            {
+                // Decrypt the customer data after retrieving it
+                creditCard.Decrypt();
+            }
+
+            return creditCards;
+        }
+
+        public async Task UpdateAsync(CreditCardModel creditCard)
+        {
+            // Encrypt customer data before updating it
+            creditCard.Encrypt();
+
+            // Call the data access layer to update the credit card
+            await _dataAccess.UpdateAsync(creditCard);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            // Call the data access layer to delete the credit card by id
+            await _dataAccess.DeleteAsync(id);
         }
     }
 }

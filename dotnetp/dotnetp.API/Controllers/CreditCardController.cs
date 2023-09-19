@@ -1,72 +1,97 @@
 ﻿
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using dotnetp.DTO;
 using dotnetp.Service;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace dotnetp.API
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/creditcards")]
     public class CreditCardController : ControllerBase
     {
-        private readonly ICreditCardService _creditCardService;
+        private readonly ICreditCardRepository _creditCardRepository;
 
-        public CreditCardController(ICreditCardService creditCardService)
+        public CreditCardController(ICreditCardRepository creditCardRepository)
         {
-            _creditCardService = creditCardService;
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<CreditCardModel>>> GetAllAsync()
-        {
-            var creditCards = await _creditCardService.GetAllAsync();
-            return Ok(creditCards);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<CreditCardModel>> GetByIdAsync(int id)
-        {
-            var creditCard = await _creditCardService.GetByIdAsync(id);
-            if (creditCard == null)
-            {
-                return NotFound();
-            }
-            return creditCard;
+            _creditCardRepository = creditCardRepository;
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> CreateAsync(CreditCardModel creditCard)
+        public async Task<IActionResult> CreateAsync(CreditCardModel creditCard)
         {
-            var createdId = await _creditCardService.CreateAsync(creditCard);
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = createdId }, createdId);
+            try
+            {
+                int id = await _creditCardRepository.CreateAsync(creditCard);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetByIdAsync(int id)
+        {
+            try
+            {
+                CreditCardModel creditCard = await _creditCardRepository.GetByIdAsync(id);
+                if (creditCard == null)
+                {
+                    return NotFound();
+                }
+                return Ok(creditCard);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            try
+            {
+                List<CreditCardModel> creditCards = await _creditCardRepository.GetAllAsync();
+                return Ok(creditCards);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<bool>> UpdateAsync(int id, CreditCardModel creditCard)
+        public async Task<IActionResult> UpdateAsync(int id, CreditCardModel creditCard)
         {
-            if (id != creditCard.Id)
+            try
             {
-                return BadRequest();
+                creditCard.Id = id;
+                await _creditCardRepository.UpdateAsync(creditCard);
+                return Ok();
             }
-            var updated = await _creditCardService.UpdateAsync(creditCard);
-            if (!updated)
+            catch (Exception ex)
             {
-                return NotFound();
+                return BadRequest(ex.Message);
             }
-            return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<bool>> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-            var deleted = await _creditCardService.DeleteAsync(id);
-            if (!deleted)
+            try
             {
-                return NotFound();
+                await _creditCardRepository.DeleteAsync(id);
+                return Ok();
             }
-            return NoContent();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
