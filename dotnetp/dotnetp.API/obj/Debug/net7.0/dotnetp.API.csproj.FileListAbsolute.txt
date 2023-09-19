@@ -50,3 +50,6 @@ C:\Amar\Application\20230911_Debug\Apps\1\1567\202309154007\dotnetp\dotnetp.API\
 C:\Amar\Application\20230911_Debug\Apps\1\1566\202309152140\dotnetp\dotnetp.API\obj\Debug\net7.0\dotnetp.API.dll
 C:\Amar\Application\20230911_Debug\Apps\1\1566\202309152140\dotnetp\dotnetp.API\obj\Debug\net7.0\refint\dotnetp.API.dll
 C:\Amar\Application\20230911_Debug\Apps\1\1566\202309152140\dotnetp\dotnetp.API\obj\Debug\net7.0\dotnetp.API.pdb
+C:\Amar\Application\20230911_Debug\Apps\1\1570\202309195400\dotnetp\dotnetp.API\obj\Debug\net7.0\dotnetp.API.dll
+C:\Amar\Application\20230911_Debug\Apps\1\1570\202309195400\dotnetp\dotnetp.API\obj\Debug\net7.0\refint\dotnetp.API.dll
+C:\Amar\Application\20230911_Debug\Apps\1\1570\202309195400\dotnetp\dotnetp.API\obj\Debug\net7.0\dotnetp.API.pdb
