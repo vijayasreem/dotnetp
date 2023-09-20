@@ -30,3 +30,6 @@ C:\Amar\Application\20230911_Debug\Apps\1\1574\202309195303\dotnetp\dotnetp.Serv
 C:\Amar\Application\20230911_Debug\Apps\1\1577\202309194216\dotnetp\dotnetp.Service\obj\Debug\net7.0\dotnetp.Service.dll
 C:\Amar\Application\20230911_Debug\Apps\1\1577\202309194216\dotnetp\dotnetp.Service\obj\Debug\net7.0\refint\dotnetp.Service.dll
 C:\Amar\Application\20230911_Debug\Apps\1\1577\202309194216\dotnetp\dotnetp.Service\obj\Debug\net7.0\dotnetp.Service.pdb
+C:\Amar\Application\20230911_Debug\Apps\1\1582\202309204239\dotnetp\dotnetp.Service\obj\Debug\net7.0\dotnetp.Service.dll
+C:\Amar\Application\20230911_Debug\Apps\1\1582\202309204239\dotnetp\dotnetp.Service\obj\Debug\net7.0\refint\dotnetp.Service.dll
+C:\Amar\Application\20230911_Debug\Apps\1\1582\202309204239\dotnetp\dotnetp.Service\obj\Debug\net7.0\dotnetp.Service.pdb
