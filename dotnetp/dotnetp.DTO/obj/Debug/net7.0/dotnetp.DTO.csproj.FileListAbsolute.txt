@@ -82,3 +82,15 @@ C:\Amar\Application\20230911_Debug\Apps\1\1582\202309204239\dotnetp\dotnetp.DTO\
 C:\Amar\Application\20230911_Debug\Apps\1\1582\202309204239\dotnetp\dotnetp.DTO\bin\Debug\net7.0\dotnetp.DTO.dll
 C:\Amar\Application\20230911_Debug\Apps\1\1582\202309204239\dotnetp\dotnetp.DTO\bin\Debug\net7.0\dotnetp.DTO.pdb
 C:\Amar\Application\20230911_Debug\Apps\1\1582\202309204239\dotnetp\dotnetp.DTO\obj\Debug\net7.0\ref\dotnetp.DTO.dll
+C:\Amar\Application\20230911_Debug\Apps\1\1586\202309204744\dotnetp\dotnetp.DTO\bin\Debug\net7.0\dotnetp.DTO.deps.json
+C:\Amar\Application\20230911_Debug\Apps\1\1586\202309204744\dotnetp\dotnetp.DTO\bin\Debug\net7.0\dotnetp.DTO.dll
+C:\Amar\Application\20230911_Debug\Apps\1\1586\202309204744\dotnetp\dotnetp.DTO\bin\Debug\net7.0\dotnetp.DTO.pdb
+C:\Amar\Application\20230911_Debug\Apps\1\1586\202309204744\dotnetp\dotnetp.DTO\obj\Debug\net7.0\dotnetp.DTO.csproj.AssemblyReference.cache
+C:\Amar\Application\20230911_Debug\Apps\1\1586\202309204744\dotnetp\dotnetp.DTO\obj\Debug\net7.0\dotnetp.DTO.GeneratedMSBuildEditorConfig.editorconfig
+C:\Amar\Application\20230911_Debug\Apps\1\1586\202309204744\dotnetp\dotnetp.DTO\obj\Debug\net7.0\dotnetp.DTO.AssemblyInfoInputs.cache
+C:\Amar\Application\20230911_Debug\Apps\1\1586\202309204744\dotnetp\dotnetp.DTO\obj\Debug\net7.0\dotnetp.DTO.AssemblyInfo.cs
+C:\Amar\Application\20230911_Debug\Apps\1\1586\202309204744\dotnetp\dotnetp.DTO\obj\Debug\net7.0\dotnetp.DTO.csproj.CoreCompileInputs.cache
+C:\Amar\Application\20230911_Debug\Apps\1\1586\202309204744\dotnetp\dotnetp.DTO\obj\Debug\net7.0\dotnetp.DTO.dll
+C:\Amar\Application\20230911_Debug\Apps\1\1586\202309204744\dotnetp\dotnetp.DTO\obj\Debug\net7.0\refint\dotnetp.DTO.dll
+C:\Amar\Application\20230911_Debug\Apps\1\1586\202309204744\dotnetp\dotnetp.DTO\obj\Debug\net7.0\dotnetp.DTO.pdb
+C:\Amar\Application\20230911_Debug\Apps\1\1586\202309204744\dotnetp\dotnetp.DTO\obj\Debug\net7.0\ref\dotnetp.DTO.dll

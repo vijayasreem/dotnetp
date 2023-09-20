@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1582\\202309204239\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj",
+      "projectUniqueName": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1586\\202309204744\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj",
       "projectName": "dotnetp.DTO",
-      "projectPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1582\\202309204239\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj",
+      "projectPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1586\\202309204744\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj",
       "packagesPath": "C:\\Users\\mmadipally\\.nuget\\packages\\",
-      "outputPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1582\\202309204239\\dotnetp\\dotnetp.DTO\\obj\\",
+      "outputPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1586\\202309204744\\dotnetp\\dotnetp.DTO\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\mmadipally\\AppData\\Roaming\\NuGet\\NuGet.Config"
