@@ -1,83 +1,56 @@
-﻿using dotnetp.DataAccess;
-using dotnetp.DTO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using dotnetp.DTO;
+using dotnetp.DataAccess;
 
 namespace dotnetp.Service
 {
     public class UserStoryService : IUserStoryService
     {
-        private readonly IUserStoryRepository _userStoryRepository;
+        private readonly IUserStoryModelRepository _userStoryRepository;
 
-        public UserStoryService(IUserStoryRepository userStoryRepository)
+        public UserStoryService(IUserStoryModelRepository userStoryRepository)
         {
             _userStoryRepository = userStoryRepository;
         }
 
-        public async Task<UserStoryModel> GetByIdAsync(string id)
+        public async Task<bool> CheckEligibilityAsync(UserStoryModel userStoryModel)
         {
-            return await _userStoryRepository.GetByIdAsync(id);
-        }
-
-        public async Task<IEnumerable<UserStoryModel>> GetAllAsync()
-        {
-            return await _userStoryRepository.GetAllAsync();
-        }
-
-        public async Task AddAsync(UserStoryModel userStory)
-        {
-            await _userStoryRepository.AddAsync(userStory);
-        }
-
-        public async Task UpdateAsync(UserStoryModel userStory)
-        {
-            await _userStoryRepository.UpdateAsync(userStory);
-        }
-
-        public async Task DeleteAsync(string id)
-        {
-            await _userStoryRepository.DeleteAsync(id);
-        }
-
-        public bool CheckEligibility(UserStoryModel userStory)
-        {
-            if (userStory.ProductCode != "CTE01")
+            if (userStoryModel.ProductCode != "CTE01")
                 return false;
 
-            if (userStory.ProductDescription != "Family Health Insurance")
+            if (userStoryModel.ProductDescription != "Family Health Insurance")
                 return false;
 
-            if (userStory.EffectiveStartDate < new DateTime(2023, 1, 6))
+            if (userStoryModel.EffectiveStartDate < new DateTime(2023, 1, 6))
                 return false;
 
-            if (userStory.EffectiveEndDate > new DateTime(2027, 7, 12))
+            if (userStoryModel.EffectiveEndDate > new DateTime(2027, 7, 12))
                 return false;
 
-            if (userStory.BusinessType != "New Business" && userStory.BusinessType != "Renewal")
+            if (userStoryModel.BusinessType != "New Business" && userStoryModel.BusinessType != "Renewal")
                 return false;
 
-            if (userStory.MinTerm < 1 || userStory.MaxTerm > 3)
+            if (userStoryModel.MinTerm < 1 || userStoryModel.MaxTerm > 3)
                 return false;
 
-            if (userStory.NoOfAdults != 1)
+            if (userStoryModel.NumberOfAdults != 1)
                 return false;
 
-            if (userStory.NoOfChildren < 1 || userStory.NoOfChildren > 2)
+            if (userStoryModel.NumberOfChildren < 1 || userStoryModel.NumberOfChildren > 2)
                 return false;
 
-            if (userStory.MinAgeAllowed < 0 || userStory.MaxAgeAllowed > 99)
+            if (userStoryModel.MinAgeAllowed < 0 || userStoryModel.MaxAgeAllowed > 99)
                 return false;
 
-            if (userStory.Relationship != "SPOUSE" && userStory.Relationship != "SON" && userStory.Relationship != "SELF" 
-                && userStory.Relationship != "MOTHER" && userStory.Relationship != "FATHER" && userStory.Relationship != "DAUGHTER")
+            if (userStoryModel.Relationship != "SPOUSE" && userStoryModel.Relationship != "SON" && userStoryModel.Relationship != "SELF" && userStoryModel.Relationship != "MOTHER" && userStoryModel.Relationship != "FATHER" && userStoryModel.Relationship != "DAUGHTER")
                 return false;
 
-            if (userStory.Occupation != "Salaried" && userStory.Occupation != "Business" && userStory.Occupation != "Doctor" 
-                && userStory.Occupation != "Lawyer" && userStory.Occupation != "Engineer")
+            if (userStoryModel.Occupation != "Salaried" && userStoryModel.Occupation != "Business" && userStoryModel.Occupation != "Doctor" && userStoryModel.Occupation != "Lawyer" && userStoryModel.Occupation != "Engineer")
                 return false;
 
-            if (userStory.RatingCalculator != "25-35" && userStory.RatingCalculator != "35-45")
+            if (userStoryModel.RatingCalculator != "25-35" && userStoryModel.RatingCalculator != "35-45")
                 return false;
 
             return true;
