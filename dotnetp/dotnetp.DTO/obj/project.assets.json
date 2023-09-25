@@ -8,24 +8,26 @@
     "net7.0": []
   },
   "packageFolders": {
-    "C:\\Users\\mmadipally\\.nuget\\packages\\": {}
+    "C:\\Users\\anagisetty\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1588\\202309205104\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj",
+      "projectUniqueName": "E:\\Projects\\Sacral\\dotnet_service\\Application.API\\SacralAI.Code.Scheduler\\bin\\Debug\\Apps\\1\\1594\\202309250915\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj",
       "projectName": "dotnetp.DTO",
-      "projectPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1588\\202309205104\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj",
-      "packagesPath": "C:\\Users\\mmadipally\\.nuget\\packages\\",
-      "outputPath": "C:\\Amar\\Application\\20230911_Debug\\Apps\\1\\1588\\202309205104\\dotnetp\\dotnetp.DTO\\obj\\",
+      "projectPath": "E:\\Projects\\Sacral\\dotnet_service\\Application.API\\SacralAI.Code.Scheduler\\bin\\Debug\\Apps\\1\\1594\\202309250915\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj",
+      "packagesPath": "C:\\Users\\anagisetty\\.nuget\\packages\\",
+      "outputPath": "E:\\Projects\\Sacral\\dotnet_service\\Application.API\\SacralAI.Code.Scheduler\\bin\\Debug\\Apps\\1\\1594\\202309250915\\dotnetp\\dotnetp.DTO\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\mmadipally\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\anagisetty\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -59,7 +61,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files (x86)\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }
