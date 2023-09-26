@@ -205,3 +205,15 @@ E:\Projects\Sacral\dotnet_service\Application.API\SacralAI.Code.Scheduler\bin\De
 E:\Projects\Sacral\dotnet_service\Application.API\SacralAI.Code.Scheduler\bin\Debug\Apps\1\1595\202309264227\dotnetp\dotnetp.DTO\obj\Debug\net7.0\refint\dotnetp.DTO.dll
 E:\Projects\Sacral\dotnet_service\Application.API\SacralAI.Code.Scheduler\bin\Debug\Apps\1\1595\202309264227\dotnetp\dotnetp.DTO\obj\Debug\net7.0\dotnetp.DTO.pdb
 E:\Projects\Sacral\dotnet_service\Application.API\SacralAI.Code.Scheduler\bin\Debug\Apps\1\1595\202309264227\dotnetp\dotnetp.DTO\obj\Debug\net7.0\ref\dotnetp.DTO.dll
+D:\Amar\20230926_2Debug\Apps\1\1595\202309264000\dotnetp\dotnetp.DTO\bin\Debug\net7.0\dotnetp.DTO.deps.json
+D:\Amar\20230926_2Debug\Apps\1\1595\202309264000\dotnetp\dotnetp.DTO\bin\Debug\net7.0\dotnetp.DTO.dll
+D:\Amar\20230926_2Debug\Apps\1\1595\202309264000\dotnetp\dotnetp.DTO\bin\Debug\net7.0\dotnetp.DTO.pdb
+D:\Amar\20230926_2Debug\Apps\1\1595\202309264000\dotnetp\dotnetp.DTO\obj\Debug\net7.0\dotnetp.DTO.csproj.AssemblyReference.cache
+D:\Amar\20230926_2Debug\Apps\1\1595\202309264000\dotnetp\dotnetp.DTO\obj\Debug\net7.0\dotnetp.DTO.GeneratedMSBuildEditorConfig.editorconfig
+D:\Amar\20230926_2Debug\Apps\1\1595\202309264000\dotnetp\dotnetp.DTO\obj\Debug\net7.0\dotnetp.DTO.AssemblyInfoInputs.cache
+D:\Amar\20230926_2Debug\Apps\1\1595\202309264000\dotnetp\dotnetp.DTO\obj\Debug\net7.0\dotnetp.DTO.AssemblyInfo.cs
+D:\Amar\20230926_2Debug\Apps\1\1595\202309264000\dotnetp\dotnetp.DTO\obj\Debug\net7.0\dotnetp.DTO.csproj.CoreCompileInputs.cache
+D:\Amar\20230926_2Debug\Apps\1\1595\202309264000\dotnetp\dotnetp.DTO\obj\Debug\net7.0\dotnetp.DTO.dll
+D:\Amar\20230926_2Debug\Apps\1\1595\202309264000\dotnetp\dotnetp.DTO\obj\Debug\net7.0\refint\dotnetp.DTO.dll
+D:\Amar\20230926_2Debug\Apps\1\1595\202309264000\dotnetp\dotnetp.DTO\obj\Debug\net7.0\dotnetp.DTO.pdb
+D:\Amar\20230926_2Debug\Apps\1\1595\202309264000\dotnetp\dotnetp.DTO\obj\Debug\net7.0\ref\dotnetp.DTO.dll

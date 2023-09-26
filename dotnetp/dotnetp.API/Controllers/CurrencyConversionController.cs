@@ -8,58 +8,97 @@ using System.Threading.Tasks;
 namespace dotnetp.API
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/currency")]
     public class CurrencyConversionController : ControllerBase
     {
-        private readonly ICurrencyConversionService _currencyConversionService;
+        private readonly ICurrencyConversionModelService _currencyConversionService;
 
-        public CurrencyConversionController(ICurrencyConversionService currencyConversionService)
+        public CurrencyConversionController(ICurrencyConversionModelService currencyConversionService)
         {
-            _currencyConversionService = currencyConversionService ?? throw new ArgumentNullException(nameof(currencyConversionService));
+            _currencyConversionService = currencyConversionService;
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> CreateAsync(CurrencyConversionModel model)
+        public async Task<IActionResult> CreateAsync(CurrencyConversionModel model)
         {
-            var id = await _currencyConversionService.CreateAsync(model);
-            return Ok(id);
+            try
+            {
+                int id = await _currencyConversionService.CreateAsync(model);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CurrencyConversionModel>> GetByIdAsync(int id)
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
-            var model = await _currencyConversionService.GetByIdAsync(id);
-            if (model == null)
+            try
             {
-                return NotFound();
+                var model = await _currencyConversionService.GetByIdAsync(id);
+                if (model == null)
+                {
+                    return NotFound();
+                }
+                return Ok(model);
             }
-            return Ok(model);
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<CurrencyConversionModel>>> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var models = await _currencyConversionService.GetAllAsync();
-            return Ok(models);
+            try
+            {
+                var models = await _currencyConversionService.GetAllAsync();
+                return Ok(models);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync(int id, CurrencyConversionModel model)
         {
-            if (id != model.Id)
+            try
             {
-                return BadRequest();
+                model.Id = id;
+                bool result = await _currencyConversionService.UpdateAsync(model);
+                if (!result)
+                {
+                    return NotFound();
+                }
+                return Ok();
             }
-
-            await _currencyConversionService.UpdateAsync(model);
-            return NoContent();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            await _currencyConversionService.DeleteAsync(id);
-            return NoContent();
+            try
+            {
+                bool result = await _currencyConversionService.DeleteAsync(id);
+                if (!result)
+                {
+                    return NotFound();
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
