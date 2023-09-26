@@ -1,4 +1,4 @@
 ﻿public interface IUserStoryService
 {
-    Task<bool> CheckEligibilityAsync(UserStoryModel userStoryModel);
+    Task<bool> CheckEligibilityAsync(UserStoryModel userStory);
 }

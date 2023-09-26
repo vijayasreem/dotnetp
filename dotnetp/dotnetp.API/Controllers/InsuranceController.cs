@@ -1,9 +1,9 @@
 ﻿
-using dotnetp.DTO;
-using dotnetp.Service;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using dotnetp.DTO;
+using dotnetp.Service;
 
 namespace dotnetp.API
 {
@@ -19,11 +19,11 @@ namespace dotnetp.API
         }
 
         [HttpPost]
-        public async Task<IActionResult> CheckEligibility([FromBody] UserStoryModel userStoryModel)
+        public async Task<IActionResult> CheckEligibility(UserStoryModel userStory)
         {
             try
             {
-                bool isEligible = await _userStoryService.CheckEligibilityAsync(userStoryModel);
+                bool isEligible = await _userStoryService.CheckEligibilityAsync(userStory);
 
                 if (isEligible)
                 {
