@@ -1,6 +1,7 @@
-﻿using System.Threading.Tasks;
-using dotnetp.DataAccess;
+﻿using dotnetp.DataAccess;
 using dotnetp.DTO;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace dotnetp.Service
 {
@@ -13,24 +14,56 @@ namespace dotnetp.Service
             _bookingModelRepository = bookingModelRepository;
         }
 
-        public async Task<int> CreateBookingAsync(BookingModel booking)
+        public async Task<int> CreateAsync(BookingModel booking)
         {
-            return await _bookingModelRepository.CreateBookingAsync(booking);
+            // TODO: Add your implementation here
+            return await _bookingModelRepository.CreateAsync(booking);
         }
 
-        public async Task<BookingModel> GetBookingByIdAsync(int id)
+        public async Task<BookingModel> GetByIdAsync(int id)
         {
-            return await _bookingModelRepository.GetBookingByIdAsync(id);
+            // TODO: Add your implementation here
+            return await _bookingModelRepository.GetByIdAsync(id);
         }
 
-        public async Task<bool> UpdateBookingAsync(BookingModel booking)
+        public async Task<IEnumerable<BookingModel>> GetAllAsync()
         {
-            return await _bookingModelRepository.UpdateBookingAsync(booking);
+            // TODO: Add your implementation here
+            return await _bookingModelRepository.GetAllAsync();
         }
 
-        public async Task<bool> DeleteBookingAsync(int id)
+        public async Task<bool> UpdateAsync(BookingModel booking)
         {
-            return await _bookingModelRepository.DeleteBookingAsync(id);
+            // TODO: Add your implementation here
+            return await _bookingModelRepository.UpdateAsync(booking);
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            // TODO: Add your implementation here
+            return await _bookingModelRepository.DeleteAsync(id);
+        }
+
+        // Additional methods related to the cancellation of booking
+
+        public async Task<bool> CancelBookingAsync(int id)
+        {
+            BookingModel booking = await _bookingModelRepository.GetByIdAsync(id);
+
+            if (booking != null)
+            {
+                DateTime checkInDate = booking.CheckInDate;
+                DateTime cancelationDeadline = checkInDate.AddHours(-24);
+
+                if (DateTime.Now < cancelationDeadline)
+                {
+                    // TODO: Implement the cancellation logic
+                    // Update the booking status, calculate refund, etc.
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

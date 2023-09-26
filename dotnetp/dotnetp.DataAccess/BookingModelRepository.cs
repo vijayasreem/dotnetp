@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using dotnetp.DTO;
@@ -15,46 +15,44 @@ namespace dotnetp
             this.connectionString = connectionString;
         }
 
-        public async Task<int> CreateBookingAsync(BookingModel booking)
+        public async Task<int> CreateAsync(BookingModel booking)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "INSERT INTO Bookings (CheckInDate, IsCancelled) VALUES (@CheckInDate, @IsCancelled); SELECT SCOPE_IDENTITY();";
+                await connection.OpenAsync();
+
+                string query = "INSERT INTO Bookings (IsCancelled, CheckInDate, CancelationDeadline) " +
+                               "VALUES (@IsCancelled, @CheckInDate, @CancelationDeadline);" +
+                               "SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@CheckInDate", booking.CheckInDate);
                     command.Parameters.AddWithValue("@IsCancelled", booking.IsCancelled);
+                    command.Parameters.AddWithValue("@CheckInDate", booking.CheckInDate);
+                    command.Parameters.AddWithValue("@CancelationDeadline", booking.CancelationDeadline);
 
-                    await connection.OpenAsync();
-                    int newId = Convert.ToInt32(await command.ExecuteScalarAsync());
-
-                    return newId;
+                    return (int)await command.ExecuteScalarAsync();
                 }
             }
         }
 
-        public async Task<BookingModel> GetBookingByIdAsync(int id)
+        public async Task<BookingModel> GetByIdAsync(int id)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "SELECT * FROM Bookings WHERE Id = @Id";
+                await connection.OpenAsync();
+
+                string query = "SELECT * FROM Bookings WHERE Id = @Id;";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);
 
-                    await connection.OpenAsync();
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
-                            return new BookingModel
-                            {
-                                Id = Convert.ToInt32(reader["Id"]),
-                                CheckInDate = Convert.ToDateTime(reader["CheckInDate"]),
-                                IsCancelled = Convert.ToBoolean(reader["IsCancelled"])
-                            };
+                            return MapBookingModel(reader);
                         }
                     }
                 }
@@ -63,19 +61,47 @@ namespace dotnetp
             return null;
         }
 
-        public async Task<bool> UpdateBookingAsync(BookingModel booking)
+        public async Task<IEnumerable<BookingModel>> GetAllAsync()
         {
+            List<BookingModel> bookings = new List<BookingModel>();
+
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "UPDATE Bookings SET CheckInDate = @CheckInDate, IsCancelled = @IsCancelled WHERE Id = @Id";
+                await connection.OpenAsync();
+
+                string query = "SELECT * FROM Bookings;";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@CheckInDate", booking.CheckInDate);
-                    command.Parameters.AddWithValue("@IsCancelled", booking.IsCancelled);
-                    command.Parameters.AddWithValue("@Id", booking.Id);
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            bookings.Add(MapBookingModel(reader));
+                        }
+                    }
+                }
+            }
 
-                    await connection.OpenAsync();
+            return bookings;
+        }
+
+        public async Task<bool> UpdateAsync(BookingModel booking)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                string query = "UPDATE Bookings SET IsCancelled = @IsCancelled, CheckInDate = @CheckInDate, CancelationDeadline = @CancelationDeadline " +
+                               "WHERE Id = @Id;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", booking.Id);
+                    command.Parameters.AddWithValue("@IsCancelled", booking.IsCancelled);
+                    command.Parameters.AddWithValue("@CheckInDate", booking.CheckInDate);
+                    command.Parameters.AddWithValue("@CancelationDeadline", booking.CancelationDeadline);
+
                     int rowsAffected = await command.ExecuteNonQueryAsync();
 
                     return rowsAffected > 0;
@@ -83,22 +109,34 @@ namespace dotnetp
             }
         }
 
-        public async Task<bool> DeleteBookingAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "DELETE FROM Bookings WHERE Id = @Id";
+                await connection.OpenAsync();
+
+                string query = "DELETE FROM Bookings WHERE Id = @Id;";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);
 
-                    await connection.OpenAsync();
                     int rowsAffected = await command.ExecuteNonQueryAsync();
 
                     return rowsAffected > 0;
                 }
             }
+        }
+
+        private BookingModel MapBookingModel(SqlDataReader reader)
+        {
+            return new BookingModel
+            {
+                Id = (int)reader["Id"],
+                IsCancelled = (bool)reader["IsCancelled"],
+                CheckInDate = (DateTime)reader["CheckInDate"],
+                CancelationDeadline = (DateTime)reader["CancelationDeadline"]
+            };
         }
     }
 }
