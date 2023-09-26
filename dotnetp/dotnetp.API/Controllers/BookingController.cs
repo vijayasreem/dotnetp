@@ -1,14 +1,15 @@
 ﻿
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using dotnetp.DTO;
 using dotnetp.Service;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace dotnetp.API
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class BookingController : ControllerBase
     {
         private readonly IBookingModelService _bookingService;
@@ -19,58 +20,102 @@ namespace dotnetp.API
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateBooking(BookingModel booking)
+        public async Task<IActionResult> CreateAsync([FromBody] BookingModel booking)
         {
-            await _bookingService.CreateAsync(booking);
-            return Ok();
+            try
+            {
+                var id = await _bookingService.CreateAsync(booking);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetBookingById(int id)
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
-            var booking = await _bookingService.GetByIdAsync(id);
-            if (booking == null)
+            try
             {
-                return NotFound();
+                var booking = await _bookingService.GetByIdAsync(id);
+                if (booking == null)
+                {
+                    return NotFound();
+                }
+                return Ok(booking);
             }
-            return Ok(booking);
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            try
+            {
+                var bookings = await _bookingService.GetAllAsync();
+                return Ok(bookings);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBooking(int id, BookingModel booking)
+        public async Task<IActionResult> UpdateAsync(int id, [FromBody] BookingModel booking)
         {
-            if (id != booking.Id)
+            try
             {
-                return BadRequest();
+                if (id != booking.Id)
+                {
+                    return BadRequest("Invalid booking ID");
+                }
+
+                await _bookingService.UpdateAsync(booking);
+                return NoContent();
             }
-            await _bookingService.UpdateAsync(booking);
-            return Ok();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBooking(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-            await _bookingService.DeleteAsync(id);
-            return Ok();
+            try
+            {
+                await _bookingService.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpPost("{id}/cancel")]
-        public async Task<IActionResult> CancelBooking(int id)
+        [HttpPut("{id}/cancel")]
+        public async Task<IActionResult> CancelBookingAsync(int id)
         {
-            var booking = await _bookingService.GetByIdAsync(id);
-            if (booking == null)
+            try
             {
-                return NotFound();
-            }
+                var canCancel = await _bookingService.CanCancelBookingAsync(id);
+                if (!canCancel)
+                {
+                    return BadRequest("Cannot cancel booking");
+                }
 
-            var canCancel = await _bookingService.CanCancelBookingAsync(booking);
-            if (!canCancel)
+                await _bookingService.CancelBookingAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
             {
-                return BadRequest("Booking cannot be cancelled.");
+                return BadRequest(ex.Message);
             }
-
-            await _bookingService.CancelBookingAsync(booking);
-            return Ok();
         }
     }
 }

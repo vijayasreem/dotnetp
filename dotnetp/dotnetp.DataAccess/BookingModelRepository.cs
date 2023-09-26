@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
@@ -6,81 +8,141 @@ using dotnetp.DTO;
 
 namespace dotnetp
 {
-    public class BookingModelRepository : IBookingModelRepository
+    public class BookingModelRepository
     {
-        private readonly string connectionString;
-
+        private readonly string _connectionString;
+        
         public BookingModelRepository(string connectionString)
         {
-            this.connectionString = connectionString;
+            _connectionString = connectionString;
         }
-
-        public async Task CreateAsync(BookingModel booking)
+        
+        public async Task<int> CreateAsync(BookingModel booking)
         {
-            using (var connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                await connection.OpenAsync();
+                using (SqlCommand command = new SqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "INSERT INTO Bookings (CheckInDate, CheckOutDate, CustomerName, CustomerEmail, IsCancelled) VALUES (@CheckInDate, @CheckOutDate, @CustomerName, @CustomerEmail, @IsCancelled); SELECT SCOPE_IDENTITY();";
 
-                var command = new SqlCommand("INSERT INTO Bookings (CheckInDate, IsCancelled) VALUES (@CheckInDate, @IsCancelled)", connection);
-                command.Parameters.AddWithValue("@CheckInDate", booking.CheckInDate);
-                command.Parameters.AddWithValue("@IsCancelled", booking.IsCancelled);
+                    command.Parameters.AddWithValue("@CheckInDate", booking.CheckInDate);
+                    command.Parameters.AddWithValue("@CheckOutDate", booking.CheckOutDate);
+                    command.Parameters.AddWithValue("@CustomerName", booking.CustomerName);
+                    command.Parameters.AddWithValue("@CustomerEmail", booking.CustomerEmail);
+                    command.Parameters.AddWithValue("@IsCancelled", booking.IsCancelled);
 
-                await command.ExecuteNonQueryAsync();
+                    await connection.OpenAsync();
+                    int newId = Convert.ToInt32(await command.ExecuteScalarAsync());
+                    
+                    return newId;
+                }
             }
         }
-
+        
         public async Task<BookingModel> GetByIdAsync(int id)
         {
-            using (var connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                await connection.OpenAsync();
-
-                var command = new SqlCommand("SELECT Id, CheckInDate, IsCancelled FROM Bookings WHERE Id = @Id", connection);
-                command.Parameters.AddWithValue("@Id", id);
-
-                using (var reader = await command.ExecuteReaderAsync(CommandBehavior.SingleRow))
+                using (SqlCommand command = new SqlCommand())
                 {
-                    if (await reader.ReadAsync())
+                    command.Connection = connection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "SELECT * FROM Bookings WHERE Id = @Id;";
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    await connection.OpenAsync();
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        return new BookingModel
+                        if (await reader.ReadAsync())
                         {
-                            Id = reader.GetInt32(0),
-                            CheckInDate = reader.GetDateTime(1),
-                            IsCancelled = reader.GetBoolean(2)
-                        };
+                            return MapBookingModel(reader);
+                        }
                     }
                 }
             }
-
+            
             return null;
         }
+        
+        public async Task<List<BookingModel>> GetAllAsync()
+        {
+            List<BookingModel> bookings = new List<BookingModel>();
 
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand command = new SqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "SELECT * FROM Bookings;";
+
+                    await connection.OpenAsync();
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            bookings.Add(MapBookingModel(reader));
+                        }
+                    }
+                }
+            }
+            
+            return bookings;
+        }
+        
         public async Task UpdateAsync(BookingModel booking)
         {
-            using (var connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                await connection.OpenAsync();
+                using (SqlCommand command = new SqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "UPDATE Bookings SET CheckInDate = @CheckInDate, CheckOutDate = @CheckOutDate, CustomerName = @CustomerName, CustomerEmail = @CustomerEmail, IsCancelled = @IsCancelled WHERE Id = @Id;";
 
-                var command = new SqlCommand("UPDATE Bookings SET CheckInDate = @CheckInDate, IsCancelled = @IsCancelled WHERE Id = @Id", connection);
-                command.Parameters.AddWithValue("@CheckInDate", booking.CheckInDate);
-                command.Parameters.AddWithValue("@IsCancelled", booking.IsCancelled);
-                command.Parameters.AddWithValue("@Id", booking.Id);
+                    command.Parameters.AddWithValue("@CheckInDate", booking.CheckInDate);
+                    command.Parameters.AddWithValue("@CheckOutDate", booking.CheckOutDate);
+                    command.Parameters.AddWithValue("@CustomerName", booking.CustomerName);
+                    command.Parameters.AddWithValue("@CustomerEmail", booking.CustomerEmail);
+                    command.Parameters.AddWithValue("@IsCancelled", booking.IsCancelled);
+                    command.Parameters.AddWithValue("@Id", booking.Id);
 
-                await command.ExecuteNonQueryAsync();
+                    await connection.OpenAsync();
+                    await command.ExecuteNonQueryAsync();
+                }
             }
         }
-
+        
         public async Task DeleteAsync(int id)
         {
-            using (var connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                await connection.OpenAsync();
+                using (SqlCommand command = new SqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "DELETE FROM Bookings WHERE Id = @Id;";
+                    command.Parameters.AddWithValue("@Id", id);
 
-                var command = new SqlCommand("DELETE FROM Bookings WHERE Id = @Id", connection);
-                command.Parameters.AddWithValue("@Id", id);
-
-                await command.ExecuteNonQueryAsync();
+                    await connection.OpenAsync();
+                    await command.ExecuteNonQueryAsync();
+                }
             }
+        }
+        
+        private BookingModel MapBookingModel(SqlDataReader reader)
+        {
+            return new BookingModel
+            {
+                Id = Convert.ToInt32(reader["Id"]),
+                CheckInDate = Convert.ToDateTime(reader["CheckInDate"]),
+                CheckOutDate = Convert.ToDateTime(reader["CheckOutDate"]),
+                CustomerName = Convert.ToString(reader["CustomerName"]),
+                CustomerEmail = Convert.ToString(reader["CustomerEmail"]),
+                IsCancelled = Convert.ToBoolean(reader["IsCancelled"])
+            };
         }
     }
 }

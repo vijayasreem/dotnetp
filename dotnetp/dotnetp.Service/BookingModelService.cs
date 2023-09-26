@@ -1,59 +1,80 @@
-﻿using System;
+﻿
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using dotnetp.DataAccess;
 using dotnetp.DTO;
 
 namespace dotnetp.Service
 {
-    public class BookingModelService : IBookingModelService
+    public class BookingModelService
     {
-        private readonly IBookingModelRepository _repository;
+        private readonly IBookingModelRepository _bookingRepository;
 
-        public BookingModelService(IBookingModelRepository repository)
+        public BookingModelService(IBookingModelRepository bookingRepository)
         {
-            _repository = repository;
+            _bookingRepository = bookingRepository;
         }
 
-        public async Task CreateAsync(BookingModel booking)
+        public async Task<int> CreateAsync(BookingModel booking)
         {
-            // Add your business logic for creating a booking here
-            await _repository.CreateAsync(booking);
+            // Add your business logic here
+            return await _bookingRepository.CreateAsync(booking);
         }
 
         public async Task<BookingModel> GetByIdAsync(int id)
         {
-            // Add your business logic for getting a booking by ID here
-            return await _repository.GetByIdAsync(id);
+            // Add your business logic here
+            return await _bookingRepository.GetByIdAsync(id);
+        }
+
+        public async Task<List<BookingModel>> GetAllAsync()
+        {
+            // Add your business logic here
+            return await _bookingRepository.GetAllAsync();
         }
 
         public async Task UpdateAsync(BookingModel booking)
         {
-            // Add your business logic for updating a booking here
-            await _repository.UpdateAsync(booking);
+            // Add your business logic here
+            await _bookingRepository.UpdateAsync(booking);
         }
 
         public async Task DeleteAsync(int id)
         {
-            // Add your business logic for deleting a booking here
-            await _repository.DeleteAsync(id);
+            // Add your business logic here
+            await _bookingRepository.DeleteAsync(id);
         }
 
-        public async Task<bool> CanCancelBookingAsync(BookingModel booking)
+        public async Task<bool> CanCancelBookingAsync(int id)
         {
-            // Add your business logic for checking if a booking can be cancelled here
-            // You can use the booking.CheckInDate property to determine the check-in date
-            // and compare it with the current date and time to check if it's within the 24-hour cancellation period
-            DateTime currentDateTime = DateTime.Now;
-            DateTime cancellationDateTime = booking.CheckInDate.AddHours(-24);
+            // Get the booking by id
+            BookingModel booking = await GetByIdAsync(id);
 
-            return currentDateTime < cancellationDateTime;
+            // Check if the booking is within the cancellation window
+            DateTime checkInDate = booking.CheckInDate;
+            TimeSpan timeUntilCheckIn = checkInDate - DateTime.Now;
+            bool isWithinCancellationWindow = timeUntilCheckIn.TotalHours > 24;
+
+            return isWithinCancellationWindow;
         }
 
-        public async Task CancelBookingAsync(BookingModel booking)
+        public async Task CancelBookingAsync(int id)
         {
-            // Add your business logic for cancelling a booking here
-            // You can call the _repository.DeleteAsync() method to delete the booking from the repository
-            await _repository.DeleteAsync(booking.Id);
+            // Check if the booking can be canceled
+            bool canCancelBooking = await CanCancelBookingAsync(id);
+
+            if (canCancelBooking)
+            {
+                // Perform the cancellation logic here
+
+                // Delete the booking
+                await DeleteAsync(id);
+            }
+            else
+            {
+                throw new Exception("Cannot cancel the booking as it is within 24 hours of check-in");
+            }
         }
     }
 }
