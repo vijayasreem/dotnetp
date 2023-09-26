@@ -1,80 +1,36 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using dotnetp.DataAccess;
 using dotnetp.DTO;
 
 namespace dotnetp.Service
 {
-    public class BookingModelService
+    public class BookingModelService : IBookingModelService
     {
-        private readonly IBookingModelRepository _bookingRepository;
+        private readonly IBookingModelRepository _bookingModelRepository;
 
-        public BookingModelService(IBookingModelRepository bookingRepository)
+        public BookingModelService(IBookingModelRepository bookingModelRepository)
         {
-            _bookingRepository = bookingRepository;
+            _bookingModelRepository = bookingModelRepository;
         }
 
-        public async Task<int> CreateAsync(BookingModel booking)
+        public async Task<int> CreateBookingAsync(BookingModel booking)
         {
-            // Add your business logic here
-            return await _bookingRepository.CreateAsync(booking);
+            return await _bookingModelRepository.CreateBookingAsync(booking);
         }
 
-        public async Task<BookingModel> GetByIdAsync(int id)
+        public async Task<BookingModel> GetBookingByIdAsync(int id)
         {
-            // Add your business logic here
-            return await _bookingRepository.GetByIdAsync(id);
+            return await _bookingModelRepository.GetBookingByIdAsync(id);
         }
 
-        public async Task<List<BookingModel>> GetAllAsync()
+        public async Task<bool> UpdateBookingAsync(BookingModel booking)
         {
-            // Add your business logic here
-            return await _bookingRepository.GetAllAsync();
+            return await _bookingModelRepository.UpdateBookingAsync(booking);
         }
 
-        public async Task UpdateAsync(BookingModel booking)
+        public async Task<bool> DeleteBookingAsync(int id)
         {
-            // Add your business logic here
-            await _bookingRepository.UpdateAsync(booking);
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            // Add your business logic here
-            await _bookingRepository.DeleteAsync(id);
-        }
-
-        public async Task<bool> CanCancelBookingAsync(int id)
-        {
-            // Get the booking by id
-            BookingModel booking = await GetByIdAsync(id);
-
-            // Check if the booking is within the cancellation window
-            DateTime checkInDate = booking.CheckInDate;
-            TimeSpan timeUntilCheckIn = checkInDate - DateTime.Now;
-            bool isWithinCancellationWindow = timeUntilCheckIn.TotalHours > 24;
-
-            return isWithinCancellationWindow;
-        }
-
-        public async Task CancelBookingAsync(int id)
-        {
-            // Check if the booking can be canceled
-            bool canCancelBooking = await CanCancelBookingAsync(id);
-
-            if (canCancelBooking)
-            {
-                // Perform the cancellation logic here
-
-                // Delete the booking
-                await DeleteAsync(id);
-            }
-            else
-            {
-                throw new Exception("Cannot cancel the booking as it is within 24 hours of check-in");
-            }
+            return await _bookingModelRepository.DeleteBookingAsync(id);
         }
     }
 }

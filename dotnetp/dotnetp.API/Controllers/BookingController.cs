@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Threading.Tasks;
 using dotnetp.DTO;
 using dotnetp.Service;
@@ -20,101 +18,70 @@ namespace dotnetp.API
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] BookingModel booking)
+        public async Task<IActionResult> CreateBookingAsync(BookingModel booking)
         {
             try
             {
-                var id = await _bookingService.CreateAsync(booking);
-                return Ok(id);
+                int bookingId = await _bookingService.CreateBookingAsync(booking);
+                return Ok(bookingId);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(e.Message);
             }
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<IActionResult> GetBookingByIdAsync(int id)
         {
             try
             {
-                var booking = await _bookingService.GetByIdAsync(id);
+                BookingModel booking = await _bookingService.GetBookingByIdAsync(id);
                 if (booking == null)
                 {
                     return NotFound();
                 }
                 return Ok(booking);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(e.Message);
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        [HttpPut]
+        public async Task<IActionResult> UpdateBookingAsync(BookingModel booking)
         {
             try
             {
-                var bookings = await _bookingService.GetAllAsync();
-                return Ok(bookings);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync(int id, [FromBody] BookingModel booking)
-        {
-            try
-            {
-                if (id != booking.Id)
+                bool result = await _bookingService.UpdateBookingAsync(booking);
+                if (!result)
                 {
-                    return BadRequest("Invalid booking ID");
+                    return NotFound();
                 }
-
-                await _bookingService.UpdateAsync(booking);
-                return NoContent();
+                return Ok();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(e.Message);
             }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteBookingAsync(int id)
         {
             try
             {
-                await _bookingService.DeleteAsync(id);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut("{id}/cancel")]
-        public async Task<IActionResult> CancelBookingAsync(int id)
-        {
-            try
-            {
-                var canCancel = await _bookingService.CanCancelBookingAsync(id);
-                if (!canCancel)
+                bool result = await _bookingService.DeleteBookingAsync(id);
+                if (!result)
                 {
-                    return BadRequest("Cannot cancel booking");
+                    return NotFound();
                 }
-
-                await _bookingService.CancelBookingAsync(id);
-                return NoContent();
+                return Ok();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(e.Message);
             }
         }
     }

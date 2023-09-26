@@ -1,10 +1,13 @@
-﻿public interface IBookingModelService
+﻿using System.Threading.Tasks;
+using dotnetp.DTO;
+
+namespace dotnetp.Service
 {
-    Task<int> CreateAsync(BookingModel booking);
-    Task<BookingModel> GetByIdAsync(int id);
-    Task<List<BookingModel>> GetAllAsync();
-    Task UpdateAsync(BookingModel booking);
-    Task DeleteAsync(int id);
-    Task<bool> CanCancelBookingAsync(int id);
-    Task CancelBookingAsync(int id);
+    public interface IBookingModelService
+    {
+        Task<int> CreateBookingAsync(BookingModel booking);
+        Task<BookingModel> GetBookingByIdAsync(int id);
+        Task<bool> UpdateBookingAsync(BookingModel booking);
+        Task<bool> DeleteBookingAsync(int id);
+    }
 }
