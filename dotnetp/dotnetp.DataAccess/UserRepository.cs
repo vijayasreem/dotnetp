@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using dotnetp.DTO;
@@ -7,118 +9,135 @@ namespace dotnetp
 {
     public class UserRepository : IUserRepository
     {
-        private readonly string _connectionString;
-
+        private readonly string connectionString;
+        
         public UserRepository(string connectionString)
         {
-            _connectionString = connectionString;
+            this.connectionString = connectionString;
         }
-
-        public async Task<UserModel> GetByIdAsync(int id)
+        
+        public async Task<UserModel> GetById(int id)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(connectionString))
             {
                 await connection.OpenAsync();
-
                 var query = "SELECT * FROM Users WHERE Id = @Id";
                 var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@Id", id);
-
-                using (var reader = await command.ExecuteReaderAsync())
+                var reader = await command.ExecuteReaderAsync();
+                if (await reader.ReadAsync())
                 {
-                    if (await reader.ReadAsync())
-                    {
-                        return MapUserModel(reader);
-                    }
-
-                    return null;
+                    return MapUserModelFromReader(reader);
                 }
+                return null;
             }
         }
-
-        public async Task<List<UserModel>> GetAllAsync()
+        
+        public async Task<List<UserModel>> GetAll()
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(connectionString))
             {
                 await connection.OpenAsync();
-
                 var query = "SELECT * FROM Users";
                 var command = new SqlCommand(query, connection);
-
+                var reader = await command.ExecuteReaderAsync();
                 var users = new List<UserModel>();
-
-                using (var reader = await command.ExecuteReaderAsync())
+                while (await reader.ReadAsync())
                 {
-                    while (await reader.ReadAsync())
-                    {
-                        users.Add(MapUserModel(reader));
-                    }
+                    users.Add(MapUserModelFromReader(reader));
                 }
-
                 return users;
             }
         }
-
-        public async Task<int> CreateAsync(UserModel user)
+        
+        public async Task<UserModel> Create(UserModel user)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(connectionString))
             {
                 await connection.OpenAsync();
-
-                var query = "INSERT INTO Users (FirstName, LastName, Email, Password) VALUES (@FirstName, @LastName, @Email, @Password); SELECT SCOPE_IDENTITY();";
+                var query = "INSERT INTO Users (Name, Email, Password, PhoneNumber, Income, Age, CreditScore, BankAccountNumber, RoutingNumber, AvailableBalance, PaymentAmount, VendorName, PaymentApprovalRequired) " +
+                            "VALUES (@Name, @Email, @Password, @PhoneNumber, @Income, @Age, @CreditScore, @BankAccountNumber, @RoutingNumber, @AvailableBalance, @PaymentAmount, @VendorName, @PaymentApprovalRequired);" +
+                            "SELECT SCOPE_IDENTITY();";
                 var command = new SqlCommand(query, connection);
-
-                command.Parameters.AddWithValue("@FirstName", user.FirstName);
-                command.Parameters.AddWithValue("@LastName", user.LastName);
+                command.Parameters.AddWithValue("@Name", user.Name);
                 command.Parameters.AddWithValue("@Email", user.Email);
                 command.Parameters.AddWithValue("@Password", user.Password);
-
-                return (int)await command.ExecuteScalarAsync();
+                command.Parameters.AddWithValue("@PhoneNumber", user.PhoneNumber);
+                command.Parameters.AddWithValue("@Income", user.Income);
+                command.Parameters.AddWithValue("@Age", user.Age);
+                command.Parameters.AddWithValue("@CreditScore", user.CreditScore);
+                command.Parameters.AddWithValue("@BankAccountNumber", user.BankAccountNumber);
+                command.Parameters.AddWithValue("@RoutingNumber", user.RoutingNumber);
+                command.Parameters.AddWithValue("@AvailableBalance", user.AvailableBalance);
+                command.Parameters.AddWithValue("@PaymentAmount", user.PaymentAmount);
+                command.Parameters.AddWithValue("@VendorName", user.VendorName);
+                command.Parameters.AddWithValue("@PaymentApprovalRequired", user.PaymentApprovalRequired);
+                var newId = await command.ExecuteScalarAsync();
+                user.Id = Convert.ToInt32(newId);
+                return user;
             }
         }
-
-        public async Task<bool> UpdateAsync(UserModel user)
+        
+        public async Task<bool> Update(UserModel user)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(connectionString))
             {
                 await connection.OpenAsync();
-
-                var query = "UPDATE Users SET FirstName = @FirstName, LastName = @LastName, Email = @Email, Password = @Password WHERE Id = @Id";
+                var query = "UPDATE Users SET Name = @Name, Email = @Email, Password = @Password, PhoneNumber = @PhoneNumber, " +
+                            "Income = @Income, Age = @Age, CreditScore = @CreditScore, BankAccountNumber = @BankAccountNumber, " +
+                            "RoutingNumber = @RoutingNumber, AvailableBalance = @AvailableBalance, PaymentAmount = @PaymentAmount, " +
+                            "VendorName = @VendorName, PaymentApprovalRequired = @PaymentApprovalRequired WHERE Id = @Id";
                 var command = new SqlCommand(query, connection);
-
+                command.Parameters.AddWithValue("@Name", user.Name);
+                command.Parameters.AddWithValue("@Email", user.Email);
+                command.Parameters.AddWithValue("@Password", user.Password);
+                command.Parameters.AddWithValue("@PhoneNumber", user.PhoneNumber);
+                command.Parameters.AddWithValue("@Income", user.Income);
+                command.Parameters.AddWithValue("@Age", user.Age);
+                command.Parameters.AddWithValue("@CreditScore", user.CreditScore);
+                command.Parameters.AddWithValue("@BankAccountNumber", user.BankAccountNumber);
+                command.Parameters.AddWithValue("@RoutingNumber", user.RoutingNumber);
+                command.Parameters.AddWithValue("@AvailableBalance", user.AvailableBalance);
+                command.Parameters.AddWithValue("@PaymentAmount", user.PaymentAmount);
+                command.Parameters.AddWithValue("@VendorName", user.VendorName);
+                command.Parameters.AddWithValue("@PaymentApprovalRequired", user.PaymentApprovalRequired);
                 command.Parameters.AddWithValue("@Id", user.Id);
-                command.Parameters.AddWithValue("@FirstName", user.FirstName);
-                command.Parameters.AddWithValue("@LastName", user.LastName);
-                command.Parameters.AddWithValue("@Email", user.Email);
-                command.Parameters.AddWithValue("@Password", user.Password);
-
-                return await command.ExecuteNonQueryAsync() > 0;
+                var rowsAffected = await command.ExecuteNonQueryAsync();
+                return rowsAffected > 0;
             }
         }
-
-        public async Task<bool> DeleteAsync(int id)
+        
+        public async Task<bool> Delete(int id)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(connectionString))
             {
                 await connection.OpenAsync();
-
                 var query = "DELETE FROM Users WHERE Id = @Id";
                 var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@Id", id);
-
-                return await command.ExecuteNonQueryAsync() > 0;
+                var rowsAffected = await command.ExecuteNonQueryAsync();
+                return rowsAffected > 0;
             }
         }
-
-        private UserModel MapUserModel(SqlDataReader reader)
+        
+        private UserModel MapUserModelFromReader(SqlDataReader reader)
         {
             return new UserModel
             {
-                Id = (int)reader["Id"],
-                FirstName = (string)reader["FirstName"],
-                LastName = (string)reader["LastName"],
-                Email = (string)reader["Email"],
-                Password = (string)reader["Password"]
+                Id = Convert.ToInt32(reader["Id"]),
+                Name = reader["Name"].ToString(),
+                Email = reader["Email"].ToString(),
+                Password = reader["Password"].ToString(),
+                PhoneNumber = reader["PhoneNumber"].ToString(),
+                Income = Convert.ToDouble(reader["Income"]),
+                Age = Convert.ToInt32(reader["Age"]),
+                CreditScore = Convert.ToInt32(reader["CreditScore"]),
+                BankAccountNumber = reader["BankAccountNumber"].ToString(),
+                RoutingNumber = reader["RoutingNumber"].ToString(),
+                AvailableBalance = Convert.ToDouble(reader["AvailableBalance"]),
+                PaymentAmount = Convert.ToDouble(reader["PaymentAmount"]),
+                VendorName = reader["VendorName"].ToString(),
+                PaymentApprovalRequired = Convert.ToBoolean(reader["PaymentApprovalRequired"])
             };
         }
     }

@@ -1,114 +1,138 @@
 ﻿
+
+
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using dotnetp.DTO;
 using dotnetp.Service;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace dotnetp.API
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class LoanController : ControllerBase
     {
-        private readonly IUserStoryService _userStoryService;
+        private readonly IUserRepositoryService _userRepositoryService;
 
-        public LoanController(IUserStoryService userStoryService)
+        public LoanController(IUserRepositoryService userRepositoryService)
         {
-            _userStoryService = userStoryService;
+            _userRepositoryService = userRepositoryService;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UserModel>> GetUserById(int id)
+        {
+            var user = await _userRepositoryService.GetById(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return user;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<UserModel>>> GetAllUsers()
+        {
+            var users = await _userRepositoryService.GetAll();
+            return users;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<UserModel>> CreateUser(UserModel user)
+        {
+            var createdUser = await _userRepositoryService.Create(user);
+            return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, UserModel user)
+        {
+            if (id != user.Id)
+            {
+                return BadRequest();
+            }
+
+            var updated = await _userRepositoryService.Update(user);
+            if (!updated)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var deleted = await _userRepositoryService.Delete(id);
+            if (!deleted)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
 
         [HttpPost("VerifyDocuments")]
-        public async Task<IActionResult> VerifyDocuments(DocumentModel document)
+        public async Task<ActionResult<bool>> VerifyDocuments([FromBody] string documentPath)
         {
-            // Check file format
-            if (document.FileFormat != "PDF" && document.FileFormat != "JPEG")
+            try
             {
-                throw new InvalidFileException("Invalid file format");
+                bool isValid = await _userRepositoryService.VerifyDocuments(documentPath);
+                return Ok(isValid);
             }
-
-            // Verification logic here
-
-            return Ok();
+            catch (InvalidFileException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("ValidateCreditEvaluation")]
-        public async Task<IActionResult> ValidateCreditEvaluation(CreditEvaluationModel creditEvaluation)
+        public async Task<ActionResult<bool>> ValidateCreditEvaluation([FromBody] decimal income)
         {
-            // Check customer's income
-            if (creditEvaluation.Income <= 100000)
-            {
-                throw new InvalidCreditEvaluationException("Income should be above 100000");
-            }
-
-            // Check customer's age
-            if (creditEvaluation.Age < 18 || creditEvaluation.Age > 65)
-            {
-                throw new InvalidCreditEvaluationException("Age should be between 18 and 65");
-            }
-
-            // Check credit score
-            if (creditEvaluation.CreditScore <= 600)
-            {
-                throw new InvalidCreditEvaluationException("Credit score should be above 600");
-            }
-
-            // Validation logic here
-
-            return Ok();
+            bool isValid = await _userRepositoryService.ValidateCreditEvaluation(income);
+            return Ok(isValid);
         }
 
         [HttpPost("CheckCustomerAge")]
-        public async Task<IActionResult> CheckCustomerAge(CustomerAgeModel customerAge)
+        public async Task<ActionResult<bool>> CheckCustomerAge([FromBody] int age)
         {
-            // Check customer's age
-            if (customerAge.Age < 18 || customerAge.Age > 65)
-            {
-                throw new InvalidCustomerAgeException("Age should be between 18 and 65");
-            }
-
-            // Check customer age logic here
-
-            return Ok();
+            bool isValid = await _userRepositoryService.CheckCustomerAge(age);
+            return Ok(isValid);
         }
 
         [HttpPost("CheckCreditScore")]
-        public async Task<IActionResult> CheckCreditScore(CreditScoreModel creditScore)
+        public async Task<ActionResult<bool>> CheckCreditScore([FromBody] int creditScore)
         {
-            // Check credit score
-            if (creditScore.Score <= 600)
-            {
-                throw new InvalidCreditScoreException("Credit score should be above 600");
-            }
-
-            // Check credit score logic here
-
-            return Ok();
+            bool isValid = await _userRepositoryService.CheckCreditScore(creditScore);
+            return Ok(isValid);
         }
 
         [HttpPost("ProcessDisbursement")]
-        public async Task<IActionResult> ProcessDisbursement(DisbursementModel disbursement)
+        public async Task<ActionResult<bool>> ProcessDisbursement([FromBody] DisbursementRequestModel request)
         {
-            // Check vendor's bank account number and routing number
-            if (disbursement.BankAccountNumber.Length != 9 || disbursement.RoutingNumber.Length != 9)
+            try
             {
-                throw new InvalidVendorInformationException("Invalid vendor information");
+                bool isSuccessful = await _userRepositoryService.ProcessDisbursement(request.VendorName, request.PaymentAmount, request.BankAccountNumber, request.RoutingNumber, request.AvailableBalance);
+                return Ok(isSuccessful);
             }
-
-            // Check available balance
-            if (disbursement.AvailableBalance < disbursement.PaymentAmount)
+            catch (InvalidVendorInformationException ex)
             {
-                throw new InsufficientFundsException("Insufficient funds");
+                return BadRequest(ex.Message);
             }
-
-            // Check payment amount for automatic approval
-            if (disbursement.PaymentAmount <= 1000.0)
+            catch (InsufficientFundsException)
             {
-                return Ok("Payment automatically approved");
+                return BadRequest("Insufficient funds");
             }
+        }
 
-            // Prompt for payment approval logic here
-
-            return Ok("Disbursement process successful");
+        [HttpPost("VerifyVendorInformation")]
+        public async Task<ActionResult<bool>> VerifyVendorInformation([FromBody] VendorInformationModel vendorInformation)
+        {
+            bool isValid = await _userRepositoryService.VerifyVendorInformation(vendorInformation.VendorName, vendorInformation.BankAccountNumber, vendorInformation.RoutingNumber);
+            return Ok(isValid);
         }
     }
 }
