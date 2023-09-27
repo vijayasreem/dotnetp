@@ -1,7 +1,8 @@
 ﻿public interface ICancelBookingService
 {
-    Task<int> CreateAsync(CancelBookingModel cancelBooking);
-    Task<CancelBookingModel> GetByIdAsync(int id);
-    Task<bool> UpdateAsync(CancelBookingModel cancelBooking);
-    Task<bool> DeleteAsync(int id);
+    Task<CancelBookingModel> GetBookingByIdAsync(int id);
+    Task<int> CreateBookingAsync(CancelBookingModel booking);
+    Task<bool> UpdateBookingAsync(CancelBookingModel booking);
+    Task<bool> DeleteBookingAsync(int id);
+    Task<bool> CanCancelBookingAsync(int id);
 }

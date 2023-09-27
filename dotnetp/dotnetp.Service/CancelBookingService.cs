@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using dotnetp.DataAccess;
 using dotnetp.DTO;
 
@@ -6,72 +7,45 @@ namespace dotnetp.Service
 {
     public class CancelBookingService : ICancelBookingService
     {
-        private readonly IBookingRepository _bookingRepository;
-        private readonly IEmailService _emailService;
+        private readonly IBookingDataAccess _bookingDataAccess;
 
-        public CancelBookingService(IBookingRepository bookingRepository, IEmailService emailService)
+        public CancelBookingService(IBookingDataAccess bookingDataAccess)
         {
-            _bookingRepository = bookingRepository;
-            _emailService = emailService;
+            _bookingDataAccess = bookingDataAccess;
         }
 
-        public async Task<int> CreateAsync(CancelBookingModel cancelBooking)
+        public async Task<CancelBookingModel> GetBookingByIdAsync(int id)
         {
-            return await _bookingRepository.CreateAsync(cancelBooking);
+            return await _bookingDataAccess.GetBookingByIdAsync(id);
         }
 
-        public async Task<CancelBookingModel> GetByIdAsync(int id)
+        public async Task<int> CreateBookingAsync(CancelBookingModel booking)
         {
-            return await _bookingRepository.GetByIdAsync(id);
+            return await _bookingDataAccess.CreateBookingAsync(booking);
         }
 
-        public async Task<bool> UpdateAsync(CancelBookingModel cancelBooking)
+        public async Task<bool> UpdateBookingAsync(CancelBookingModel booking)
         {
-            var booking = await _bookingRepository.GetByIdAsync(cancelBooking.Id);
-
-            if (booking == null)
-            {
-                return false;
-            }
-
-            if (booking.CheckInDate.Subtract(DateTime.Now).TotalHours <= 24)
-            {
-                return false;
-            }
-
-            booking.Status = "canceled";
-            var isUpdated = await _bookingRepository.UpdateAsync(booking);
-
-            if (isUpdated)
-            {
-                await _emailService.SendCancellationEmail(booking.CustomerEmail, booking);
-            }
-
-            return isUpdated;
+            return await _bookingDataAccess.UpdateBookingAsync(booking);
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteBookingAsync(int id)
         {
-            var booking = await _bookingRepository.GetByIdAsync(id);
+            return await _bookingDataAccess.DeleteBookingAsync(id);
+        }
 
-            if (booking == null)
+        public async Task<bool> CanCancelBookingAsync(int id)
+        {
+            // Check if the booking can be canceled 24 hours prior to check-in
+            var booking = await _bookingDataAccess.GetBookingByIdAsync(id);
+            var checkInDate = booking.CheckInDate;
+
+            if (DateTime.Now.AddDays(1) <= checkInDate)
             {
-                return false;
+                return true;
             }
 
-            if (booking.CheckInDate.Subtract(DateTime.Now).TotalHours <= 24)
-            {
-                return false;
-            }
-
-            var isDeleted = await _bookingRepository.DeleteAsync(id);
-
-            if (isDeleted)
-            {
-                await _emailService.SendCancellationEmail(booking.CustomerEmail, booking);
-            }
-
-            return isDeleted;
+            return false;
         }
     }
 }

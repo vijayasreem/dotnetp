@@ -7,127 +7,79 @@ using System.Threading.Tasks;
 
 namespace dotnetp.API
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("api/bookings")]
     public class BookingController : ControllerBase
     {
-        private readonly IBookingModelService _bookingService;
+        private readonly ICancelBookingService _cancelBookingService;
 
-        public BookingController(IBookingModelService bookingService)
+        public BookingController(ICancelBookingService cancelBookingService)
         {
-            _bookingService = bookingService;
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateAsync(BookingModel booking)
-        {
-            try
-            {
-                int bookingId = await _bookingService.CreateAsync(booking);
-                return Ok(bookingId);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            _cancelBookingService = cancelBookingService;
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<ActionResult<CancelBookingModel>> GetBookingByIdAsync(int id)
         {
-            try
+            var booking = await _cancelBookingService.GetBookingByIdAsync(id);
+
+            if (booking == null)
             {
-                BookingModel booking = await _bookingService.GetByIdAsync(id);
-                if (booking != null)
-                {
-                    return Ok(booking);
-                }
-                else
-                {
-                    return NotFound();
-                }
+                return NotFound();
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+
+            return booking;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        [HttpPost]
+        public async Task<ActionResult<int>> CreateBookingAsync(CancelBookingModel booking)
         {
-            try
-            {
-                IEnumerable<BookingModel> bookings = await _bookingService.GetAllAsync();
-                return Ok(bookings);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var bookingId = await _cancelBookingService.CreateBookingAsync(booking);
+            return CreatedAtAction(nameof(GetBookingByIdAsync), new { id = bookingId }, bookingId);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateAsync(BookingModel booking)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBookingAsync(int id, CancelBookingModel booking)
         {
-            try
+            if (id != booking.Id)
             {
-                bool isUpdated = await _bookingService.UpdateAsync(booking);
-                if (isUpdated)
-                {
-                    return Ok();
-                }
-                else
-                {
-                    return NotFound();
-                }
+                return BadRequest();
             }
-            catch (Exception ex)
+
+            var isUpdated = await _cancelBookingService.UpdateBookingAsync(booking);
+
+            if (!isUpdated)
             {
-                return BadRequest(ex.Message);
+                return NotFound();
             }
+
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteBookingAsync(int id)
         {
-            try
+            var isDeleted = await _cancelBookingService.DeleteBookingAsync(id);
+
+            if (!isDeleted)
             {
-                bool isDeleted = await _bookingService.DeleteAsync(id);
-                if (isDeleted)
-                {
-                    return Ok();
-                }
-                else
-                {
-                    return NotFound();
-                }
+                return NotFound();
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+
+            return NoContent();
         }
 
-        [HttpPut("cancel/{id}")]
-        public async Task<IActionResult> CancelBookingAsync(int id)
+        [HttpGet("{id}/cancel")]
+        public async Task<ActionResult<bool>> CanCancelBookingAsync(int id)
         {
-            try
+            var canCancel = await _cancelBookingService.CanCancelBookingAsync(id);
+
+            if (!canCancel)
             {
-                bool isCancelled = await _bookingService.CancelBookingAsync(id);
-                if (isCancelled)
-                {
-                    return Ok();
-                }
-                else
-                {
-                    return NotFound();
-                }
+                return BadRequest("Cannot cancel booking. Check-in time is less than 24 hours away.");
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+
+            return true;
         }
     }
 }

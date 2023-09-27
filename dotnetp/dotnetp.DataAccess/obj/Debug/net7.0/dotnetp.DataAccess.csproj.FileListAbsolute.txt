@@ -179,3 +179,6 @@ E:\Projects\Sacral\dotnet_service\Application.API\SacralAI.Code.Scheduler\bin\De
 E:\Projects\Sacral\dotnet_service\Application.API\SacralAI.Code.Scheduler\bin\Debug\Apps\1\1597\202309271208\dotnetp\dotnetp.DataAccess\obj\Debug\net7.0\dotnetp.DataAccess.dll
 E:\Projects\Sacral\dotnet_service\Application.API\SacralAI.Code.Scheduler\bin\Debug\Apps\1\1597\202309271208\dotnetp\dotnetp.DataAccess\obj\Debug\net7.0\refint\dotnetp.DataAccess.dll
 E:\Projects\Sacral\dotnet_service\Application.API\SacralAI.Code.Scheduler\bin\Debug\Apps\1\1597\202309271208\dotnetp\dotnetp.DataAccess\obj\Debug\net7.0\dotnetp.DataAccess.pdb
+E:\Projects\Sacral\dotnet_service\Application.API\SacralAI.Code.Scheduler\bin\Debug\Apps\1\1610\202309272256\dotnetp\dotnetp.DataAccess\obj\Debug\net7.0\dotnetp.DataAccess.dll
+E:\Projects\Sacral\dotnet_service\Application.API\SacralAI.Code.Scheduler\bin\Debug\Apps\1\1610\202309272256\dotnetp\dotnetp.DataAccess\obj\Debug\net7.0\refint\dotnetp.DataAccess.dll
+E:\Projects\Sacral\dotnet_service\Application.API\SacralAI.Code.Scheduler\bin\Debug\Apps\1\1610\202309272256\dotnetp\dotnetp.DataAccess\obj\Debug\net7.0\dotnetp.DataAccess.pdb
