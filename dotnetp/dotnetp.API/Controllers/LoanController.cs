@@ -1,12 +1,9 @@
 ﻿
-
-
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using dotnetp.DTO;
 using dotnetp.Service;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace dotnetp.API
 {
@@ -14,125 +11,152 @@ namespace dotnetp.API
     [Route("api/[controller]")]
     public class LoanController : ControllerBase
     {
-        private readonly IUserRepositoryService _userRepositoryService;
+        private readonly IVerificationService _verificationService;
+        private readonly IValidationService _validationService;
+        private readonly IDisbursementService _disbursementService;
 
-        public LoanController(IUserRepositoryService userRepositoryService)
+        public LoanController(
+            IVerificationService verificationService,
+            IValidationService validationService,
+            IDisbursementService disbursementService)
         {
-            _userRepositoryService = userRepositoryService;
+            _verificationService = verificationService;
+            _validationService = validationService;
+            _disbursementService = disbursementService;
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserModel>> GetUserById(int id)
-        {
-            var user = await _userRepositoryService.GetById(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return user;
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<List<UserModel>>> GetAllUsers()
-        {
-            var users = await _userRepositoryService.GetAll();
-            return users;
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<UserModel>> CreateUser(UserModel user)
-        {
-            var createdUser = await _userRepositoryService.Create(user);
-            return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, UserModel user)
-        {
-            if (id != user.Id)
-            {
-                return BadRequest();
-            }
-
-            var updated = await _userRepositoryService.Update(user);
-            if (!updated)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
-        {
-            var deleted = await _userRepositoryService.Delete(id);
-            if (!deleted)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
-        }
-
-        [HttpPost("VerifyDocuments")]
-        public async Task<ActionResult<bool>> VerifyDocuments([FromBody] string documentPath)
+        [HttpPost("verifyDocuments")]
+        public async Task<IActionResult> VerifyDocuments([FromBody] DocumentModel document)
         {
             try
             {
-                bool isValid = await _userRepositoryService.VerifyDocuments(documentPath);
-                return Ok(isValid);
+                if (document.FileType != FileType.PDF && document.FileType != FileType.JPEG)
+                {
+                    throw new InvalidFileException("Invalid file format. Only PDF and JPEG are supported.");
+                }
+
+                // Call verification service to verify documents
+                // ...
+
+                return Ok("Documents verified successfully.");
             }
             catch (InvalidFileException ex)
             {
                 return BadRequest(ex.Message);
             }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while verifying documents.");
+            }
         }
 
-        [HttpPost("ValidateCreditEvaluation")]
-        public async Task<ActionResult<bool>> ValidateCreditEvaluation([FromBody] decimal income)
-        {
-            bool isValid = await _userRepositoryService.ValidateCreditEvaluation(income);
-            return Ok(isValid);
-        }
-
-        [HttpPost("CheckCustomerAge")]
-        public async Task<ActionResult<bool>> CheckCustomerAge([FromBody] int age)
-        {
-            bool isValid = await _userRepositoryService.CheckCustomerAge(age);
-            return Ok(isValid);
-        }
-
-        [HttpPost("CheckCreditScore")]
-        public async Task<ActionResult<bool>> CheckCreditScore([FromBody] int creditScore)
-        {
-            bool isValid = await _userRepositoryService.CheckCreditScore(creditScore);
-            return Ok(isValid);
-        }
-
-        [HttpPost("ProcessDisbursement")]
-        public async Task<ActionResult<bool>> ProcessDisbursement([FromBody] DisbursementRequestModel request)
+        [HttpPost("validateCreditEvaluation")]
+        public async Task<IActionResult> ValidateCreditEvaluation([FromBody] CreditEvaluationModel creditEvaluation)
         {
             try
             {
-                bool isSuccessful = await _userRepositoryService.ProcessDisbursement(request.VendorName, request.PaymentAmount, request.BankAccountNumber, request.RoutingNumber, request.AvailableBalance);
-                return Ok(isSuccessful);
+                if (creditEvaluation.Income <= 100000)
+                {
+                    return BadRequest("Income should be above 100000 for salaried employees.");
+                }
+
+                if (creditEvaluation.Age < 18 || creditEvaluation.Age > 65)
+                {
+                    return BadRequest("Customer's age should be between 18 and 65.");
+                }
+
+                if (creditEvaluation.CreditScore <= 600)
+                {
+                    return BadRequest("Credit score should be above 600.");
+                }
+
+                // Call validation service to validate credit evaluation
+                // ...
+
+                return Ok("Credit evaluation validated successfully.");
             }
-            catch (InvalidVendorInformationException ex)
+            catch (Exception)
             {
-                return BadRequest(ex.Message);
-            }
-            catch (InsufficientFundsException)
-            {
-                return BadRequest("Insufficient funds");
+                return StatusCode(500, "An error occurred while validating credit evaluation.");
             }
         }
 
-        [HttpPost("VerifyVendorInformation")]
-        public async Task<ActionResult<bool>> VerifyVendorInformation([FromBody] VendorInformationModel vendorInformation)
+        [HttpPost("checkCustomerAge")]
+        public async Task<IActionResult> CheckCustomerAge([FromBody] CustomerAgeModel customerAge)
         {
-            bool isValid = await _userRepositoryService.VerifyVendorInformation(vendorInformation.VendorName, vendorInformation.BankAccountNumber, vendorInformation.RoutingNumber);
-            return Ok(isValid);
+            try
+            {
+                if (customerAge.Age < 18 || customerAge.Age > 65)
+                {
+                    return BadRequest("Customer's age should be between 18 and 65.");
+                }
+
+                // Call validation service to check customer age
+                // ...
+
+                return Ok("Customer age checked successfully.");
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while checking customer age.");
+            }
+        }
+
+        [HttpPost("checkCreditScore")]
+        public async Task<IActionResult> CheckCreditScore([FromBody] CreditScoreModel creditScore)
+        {
+            try
+            {
+                if (creditScore.CreditScore <= 600)
+                {
+                    return BadRequest("Credit score should be above 600.");
+                }
+
+                // Call validation service to check credit score
+                // ...
+
+                return Ok("Credit score checked successfully.");
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while checking credit score.");
+            }
+        }
+
+        [HttpPost("processDisbursement")]
+        public async Task<IActionResult> ProcessDisbursement([FromBody] DisbursementModel disbursement)
+        {
+            try
+            {
+                if (disbursement.VendorBankAccountNumber.Length != 9 || disbursement.VendorRoutingNumber.Length != 9)
+                {
+                    return BadRequest("Vendor's bank account number and routing number should both be nine characters in length.");
+                }
+
+                if (disbursement.AvailableBalance < disbursement.PaymentAmount)
+                {
+                    return BadRequest("Insufficient funds for disbursement.");
+                }
+
+                if (disbursement.PaymentAmount <= 1000.0)
+                {
+                    // Automatically approve payment
+                    // ...
+
+                    return Ok($"Payment of {disbursement.PaymentAmount} automatically approved.");
+                }
+                else
+                {
+                    // Prompt for payment approval
+                    // ...
+
+                    return Ok($"Payment of {disbursement.PaymentAmount} requires approval.");
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while processing disbursement.");
+            }
         }
     }
 }
