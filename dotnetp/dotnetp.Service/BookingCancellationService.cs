@@ -1,7 +1,6 @@
-﻿using dotnetp.DataAccess;
+﻿using System.Threading.Tasks;
+using dotnetp.DataAccess;
 using dotnetp.DTO;
-using System;
-using System.Threading.Tasks;
 
 namespace dotnetp.Service
 {
@@ -14,60 +13,24 @@ namespace dotnetp.Service
             _bookingCancellationRepository = bookingCancellationRepository;
         }
 
-        public async Task<BookingCancellationModel> GetById(int id)
+        public async Task<int> CreateAsync(BookingCancellationModel bookingCancellation)
         {
-            return await _bookingCancellationRepository.GetById(id);
+            return await _bookingCancellationRepository.CreateAsync(bookingCancellation);
         }
 
-        public async Task Create(BookingCancellationModel bookingCancellation)
+        public async Task<BookingCancellationModel> GetByIdAsync(int id)
         {
-            await _bookingCancellationRepository.Create(bookingCancellation);
+            return await _bookingCancellationRepository.GetByIdAsync(id);
         }
 
-        public async Task Update(BookingCancellationModel bookingCancellation)
+        public async Task UpdateAsync(BookingCancellationModel bookingCancellation)
         {
-            await _bookingCancellationRepository.Update(bookingCancellation);
+            await _bookingCancellationRepository.UpdateAsync(bookingCancellation);
         }
 
-        public async Task Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            await _bookingCancellationRepository.Delete(id);
-        }
-
-        public async Task<bool> CanCancelBooking(int bookingId, DateTime checkInDate)
-        {
-            TimeSpan timeDifference = checkInDate - DateTime.Now;
-
-            if (timeDifference.TotalHours >= 24)
-            {
-                BookingCancellationModel bookingCancellation = await _bookingCancellationRepository.GetById(bookingId);
-
-                if (bookingCancellation == null)
-                {
-                    // Update booking status to "canceled"
-                    bookingCancellation = await _bookingCancellationRepository.GetById(bookingId);
-                    bookingCancellation.Status = "canceled";
-                    await _bookingCancellationRepository.Update(bookingCancellation);
-
-                    // Send confirmation email to the customer
-                    await SendCancellationConfirmationEmail(bookingCancellation);
-
-                    return true;
-                }
-                else
-                {
-                    throw new Exception("Booking has already been canceled.");
-                }
-            }
-            else
-            {
-                throw new Exception("Cannot cancel booking less than 24 hours before check-in.");
-            }
-        }
-
-        private async Task SendCancellationConfirmationEmail(BookingCancellationModel bookingCancellation)
-        {
-            // Code to send cancellation confirmation email
+            await _bookingCancellationRepository.DeleteAsync(id);
         }
     }
 }

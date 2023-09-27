@@ -1,8 +1,7 @@
 ﻿public interface IBookingCancellationService
 {
-    Task<BookingCancellationModel> GetById(int id);
-    Task Create(BookingCancellationModel bookingCancellation);
-    Task Update(BookingCancellationModel bookingCancellation);
-    Task Delete(int id);
-    Task<bool> CanCancelBooking(int bookingId, DateTime checkInDate);
+    Task<int> CreateAsync(BookingCancellationModel bookingCancellation);
+    Task<BookingCancellationModel> GetByIdAsync(int id);
+    Task UpdateAsync(BookingCancellationModel bookingCancellation);
+    Task DeleteAsync(int id);
 }

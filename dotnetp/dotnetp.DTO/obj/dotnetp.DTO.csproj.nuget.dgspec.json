@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Projects\\Sacral\\dotnet_service\\Application.API\\SacralAI.Code.Scheduler\\bin\\Debug\\Apps\\1\\1610\\202309272256\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj": {}
+    "E:\\Projects\\Sacral\\dotnet_service\\Application.API\\SacralAI.Code.Scheduler\\bin\\Debug\\Apps\\1\\1612\\202309271708\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj": {}
   },
   "projects": {
-    "E:\\Projects\\Sacral\\dotnet_service\\Application.API\\SacralAI.Code.Scheduler\\bin\\Debug\\Apps\\1\\1610\\202309272256\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj": {
+    "E:\\Projects\\Sacral\\dotnet_service\\Application.API\\SacralAI.Code.Scheduler\\bin\\Debug\\Apps\\1\\1612\\202309271708\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Projects\\Sacral\\dotnet_service\\Application.API\\SacralAI.Code.Scheduler\\bin\\Debug\\Apps\\1\\1610\\202309272256\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj",
+        "projectUniqueName": "E:\\Projects\\Sacral\\dotnet_service\\Application.API\\SacralAI.Code.Scheduler\\bin\\Debug\\Apps\\1\\1612\\202309271708\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj",
         "projectName": "dotnetp.DTO",
-        "projectPath": "E:\\Projects\\Sacral\\dotnet_service\\Application.API\\SacralAI.Code.Scheduler\\bin\\Debug\\Apps\\1\\1610\\202309272256\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj",
+        "projectPath": "E:\\Projects\\Sacral\\dotnet_service\\Application.API\\SacralAI.Code.Scheduler\\bin\\Debug\\Apps\\1\\1612\\202309271708\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj",
         "packagesPath": "C:\\Users\\inoc\\.nuget\\packages\\",
-        "outputPath": "E:\\Projects\\Sacral\\dotnet_service\\Application.API\\SacralAI.Code.Scheduler\\bin\\Debug\\Apps\\1\\1610\\202309272256\\dotnetp\\dotnetp.DTO\\obj\\",
+        "outputPath": "E:\\Projects\\Sacral\\dotnet_service\\Application.API\\SacralAI.Code.Scheduler\\bin\\Debug\\Apps\\1\\1612\\202309271708\\dotnetp\\dotnetp.DTO\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\inoc\\AppData\\Roaming\\NuGet\\NuGet.Config",
