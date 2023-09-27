@@ -78,3 +78,6 @@ E:\Projects\Sacral\dotnet_service\Application.API\SacralAI.Code.Scheduler\bin\De
 E:\Projects\Sacral\dotnet_service\Application.API\SacralAI.Code.Scheduler\bin\Debug\Apps\1\1604\202309275202\dotnetp\dotnetp.Service\obj\Debug\net7.0\dotnetp.Service.dll
 E:\Projects\Sacral\dotnet_service\Application.API\SacralAI.Code.Scheduler\bin\Debug\Apps\1\1604\202309275202\dotnetp\dotnetp.Service\obj\Debug\net7.0\refint\dotnetp.Service.dll
 E:\Projects\Sacral\dotnet_service\Application.API\SacralAI.Code.Scheduler\bin\Debug\Apps\1\1604\202309275202\dotnetp\dotnetp.Service\obj\Debug\net7.0\dotnetp.Service.pdb
+E:\Projects\Sacral\dotnet_service\Application.API\SacralAI.Code.Scheduler\bin\Debug\Apps\1\1597\202309271208\dotnetp\dotnetp.Service\obj\Debug\net7.0\dotnetp.Service.dll
+E:\Projects\Sacral\dotnet_service\Application.API\SacralAI.Code.Scheduler\bin\Debug\Apps\1\1597\202309271208\dotnetp\dotnetp.Service\obj\Debug\net7.0\refint\dotnetp.Service.dll
+E:\Projects\Sacral\dotnet_service\Application.API\SacralAI.Code.Scheduler\bin\Debug\Apps\1\1597\202309271208\dotnetp\dotnetp.Service\obj\Debug\net7.0\dotnetp.Service.pdb
