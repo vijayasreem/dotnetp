@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "+7wz1eXykfDSygIywJxegd6qC3eI4Wb6lDpTntQZJL9SRDEHxkNaBT/cYphRkypslke8rOT+uc+liq5FzWOuag==",
+  "dgSpecHash": "KiBCJyrAhzT8H82Zng+Ma0gPVVAAS1BAQ+bTl3SIva0ZJ61GeMEpK3MR9wO6SqhS2lBmz/bNO1txe+OieGIrAA==",
   "success": true,
-  "projectFilePath": "D:\\Amar\\20230926_2Debug\\Apps\\1\\1595\\202309264000\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj",
+  "projectFilePath": "E:\\Projects\\Sacral\\dotnet_service\\Application.API\\SacralAI.Code.Scheduler\\bin\\Debug\\Apps\\1\\1604\\202309271408\\dotnetp\\dotnetp.DTO\\dotnetp.DTO.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

@@ -1,55 +1,161 @@
-﻿using System;
+﻿using dotnetp.DataAccess;
+using dotnetp.DTO;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using dotnetp.DataAccess;
-using dotnetp.DTO;
 
 namespace dotnetp.Service
 {
     public class UserStoryService : IUserStoryService
     {
-        private readonly IUserStoryRepository _userStoryRepository;
+        private readonly IUserStoryRepository _repository;
 
-        public UserStoryService(IUserStoryRepository userStoryRepository)
+        public UserStoryService(IUserStoryRepository repository)
         {
-            _userStoryRepository = userStoryRepository;
+            _repository = repository;
         }
 
-        public async Task<bool> CheckEligibilityAsync(UserStoryModel userStory)
+        public async Task<int> CreateAsync(UserStoryModel model)
         {
-            // Acceptance Criteria
-            if (userStory.ProductCode != "CTE01")
+            // Verify documents
+            if (!IsValidFileFormat(model.Document))
+            {
+                throw new InvalidFileException("Invalid file format. Only PDF or JPEG files are allowed.");
+            }
+
+            // Validate credit evaluation
+            if (!ValidateCreditEvaluation(model.CreditEvaluation))
+            {
+                throw new InvalidCreditEvaluationException("Invalid credit evaluation.");
+            }
+
+            // Check customer age
+            if (!CheckCustomerAge(model.CustomerAge))
+            {
+                throw new InvalidCustomerAgeException("Invalid customer age.");
+            }
+
+            // Check credit score
+            if (!CheckCreditScore(model.CreditScore))
+            {
+                throw new InvalidCreditScoreException("Invalid credit score.");
+            }
+
+            // Process disbursement
+            var vendor = await _repository.GetVendorAsync(model.VendorId);
+
+            if (vendor == null)
+            {
+                throw new VendorNotFoundException("Vendor not found.");
+            }
+
+            if (!CheckBankAccountNumber(vendor.BankAccountNumber))
+            {
+                throw new InvalidBankAccountNumberException("Invalid bank account number.");
+            }
+
+            if (!CheckRoutingNumber(vendor.RoutingNumber))
+            {
+                throw new InvalidRoutingNumberException("Invalid routing number.");
+            }
+
+            if (!CheckAvailableBalance(vendor.AvailableBalance, model.PaymentAmount))
+            {
+                throw new InsufficientFundsException("Insufficient funds.");
+            }
+
+            if (model.PaymentAmount <= 1000.0)
+            {
+                return await _repository.CreateAsync(model);
+            }
+            else
+            {
+                if (model.PaymentApprovalRequired)
+                {
+                    if (!model.PaymentApproved)
+                    {
+                        throw new PaymentApprovalRequiredException("Payment approval required.");
+                    }
+                }
+
+                var disbursementResult = await ProcessDisbursement(vendor.Name, model.PaymentAmount);
+                return await _repository.CreateAsync(model);
+            }
+        }
+
+        public async Task<UserStoryModel> GetByIdAsync(int id)
+        {
+            return await _repository.GetByIdAsync(id);
+        }
+
+        public async Task<List<UserStoryModel>> GetAllAsync()
+        {
+            return await _repository.GetAllAsync();
+        }
+
+        public async Task UpdateAsync(UserStoryModel model)
+        {
+            await _repository.UpdateAsync(model);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            await _repository.DeleteAsync(id);
+        }
+
+        private bool IsValidFileFormat(string document)
+        {
+            // Check file format
+            var fileExtension = document.Substring(document.LastIndexOf('.') + 1).ToLower();
+            return fileExtension == "pdf" || fileExtension == "jpeg";
+        }
+
+        private bool ValidateCreditEvaluation(CreditEvaluation evaluation)
+        {
+            // Check income for salaried employees
+            if (evaluation.EmployeeType == EmployeeType.Salaried && evaluation.Income < 100000)
+            {
                 return false;
-            if (userStory.ProductDescription != "Family Health Insurance")
-                return false;
-            if (userStory.EffectiveStartDate < new DateTime(2023, 01, 06))
-                return false;
-            if (userStory.EffectiveEndDate > new DateTime(2027, 07, 12))
-                return false;
-            if (userStory.BusinessType != "New Business" && userStory.BusinessType != "Renewal")
-                return false;
-            if (userStory.MinTerm != 1 && userStory.MinTerm != 2 && userStory.MinTerm != 3)
-                return false;
-            if (userStory.MaxTerm != 1 && userStory.MaxTerm != 2 && userStory.MaxTerm != 3)
-                return false;
-            if (userStory.NumberOfAdults != 1)
-                return false;
-            if (userStory.NumberOfChildren < 1 || userStory.NumberOfChildren > 2)
-                return false;
-            if (userStory.MinAgeAllowed < 0 || userStory.MinAgeAllowed > 99)
-                return false;
-            if (userStory.MaxAgeAllowed < 0 || userStory.MaxAgeAllowed > 99)
-                return false;
-            if (userStory.Relationship != "SPOUSE" && userStory.Relationship != "SON" && userStory.Relationship != "SELF" &&
-                userStory.Relationship != "MOTHER" && userStory.Relationship != "FATHER" && userStory.Relationship != "DAUGHTER")
-                return false;
-            if (userStory.Occupation != "Salaried" && userStory.Occupation != "Business" && userStory.Occupation != "Doctor" &&
-                userStory.Occupation != "Lawyer" && userStory.Occupation != "Engineer")
-                return false;
-            if (userStory.RatingCalculator != "25-35" && userStory.RatingCalculator != "35-45")
-                return false;
+            }
 
             return true;
+        }
+
+        private bool CheckCustomerAge(int age)
+        {
+            // Check customer age
+            return age >= 18 && age <= 65;
+        }
+
+        private bool CheckCreditScore(int creditScore)
+        {
+            // Check credit score
+            return creditScore > 600;
+        }
+
+        private bool CheckBankAccountNumber(string accountNumber)
+        {
+            // Check bank account number length
+            return accountNumber.Length == 9;
+        }
+
+        private bool CheckRoutingNumber(string routingNumber)
+        {
+            // Check routing number length
+            return routingNumber.Length == 9;
+        }
+
+        private bool CheckAvailableBalance(decimal availableBalance, decimal paymentAmount)
+        {
+            // Check available balance
+            return availableBalance >= paymentAmount;
+        }
+
+        private async Task<string> ProcessDisbursement(string vendorName, decimal paymentAmount)
+        {
+            // Process disbursement
+            // ...
+            return $"Disbursement process successful for vendor {vendorName} with payment amount {paymentAmount}.";
         }
     }
 }
