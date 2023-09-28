@@ -1,30 +1,17 @@
-﻿
-namespace dotnetp
+﻿namespace Dotnetp
 {
     public class LoanApprovalModel
     {
         public int Id { get; set; }
-
-        public string ValidIdentification { get; set; }
-
+        public string Identification { get; set; }
         public string ProofOfIncome { get; set; }
-
         public string CreditHistory { get; set; }
-
         public string EmploymentDetails { get; set; }
-
-        public bool CreditCheckPerformed { get; set; }
-
-        public decimal LoanAmount { get; set; }
-
-        public decimal InterestRateRange { get; set; }
-
-        public bool VehicleAssessmentRequired { get; set; }
-
-        public decimal VehicleValue { get; set; }
-
-        public bool LoanOfferAccepted { get; set; }
-
-        public bool LoanDisbursed { get; set; }
+        public string CreditCheck { get; set; }
+        public int LoanAmount { get; set; }
+        public float InterestRate { get; set; }
+        public string VehicleValueAssessment { get; set; }
+        public string LoanOfferAcceptance { get; set; }
+        public int DisbursedLoanAmount { get; set; }
     }
 }

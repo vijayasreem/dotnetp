@@ -1,64 +1,54 @@
-﻿
-using dotnetp.DTO;
-using dotnetp.Service;
+﻿using dotnetp.API.DTO;
+using dotnetp.API.Service;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
+ 
 namespace dotnetp.API
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class LoanApprovalController : ControllerBase
     {
-        private readonly ILoanApprovalModelService _loanApprovalService;
-
-        public LoanApprovalController(ILoanApprovalModelService loanApprovalService)
+        private readonly ILoanApprovalRepository _loanApprovalRepository;
+ 
+        public LoanApprovalController(ILoanApprovalRepository loanApprovalRepository)
         {
-            _loanApprovalService = loanApprovalService;
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateAsync(LoanApprovalModel loanApprovalModel)
-        {
-            await _loanApprovalService.CreateAsync(loanApprovalModel);
-            return Ok();
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<LoanApprovalModel>> GetByIdAsync(int id)
-        {
-            var loanApprovalModel = await _loanApprovalService.GetByIdAsync(id);
-            if (loanApprovalModel == null)
-            {
-                return NotFound();
-            }
-            return loanApprovalModel;
+            _loanApprovalRepository = loanApprovalRepository;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<LoanApprovalModel>>> GetAllAsync()
+        [Route("api/loanApproval/{id}")]
+        public async Task<ActionResult<LoanApprovalModel>> GetLoanApprovalByIdAsync(int id)
         {
-            var loanApprovalModels = await _loanApprovalService.GetAllAsync();
-            return loanApprovalModels;
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync(int id, LoanApprovalModel loanApprovalModel)
-        {
-            if (id != loanApprovalModel.Id)
+            var loanApproval = await _loanApprovalRepository.GetLoanApprovalByIdAsync(id);
+            if (loanApproval == null)
             {
-                return BadRequest();
+                return NotFound();
             }
-            await _loanApprovalService.UpdateAsync(loanApprovalModel);
-            return Ok();
+            return loanApproval;
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        [HttpPost]
+        [Route("api/loanApproval")]
+        public async Task<ActionResult<LoanApprovalModel>> CreateLoanApprovalAsync([FromBody]LoanApprovalModel loanApproval)
         {
-            await _loanApprovalService.DeleteAsync(id);
-            return Ok();
+            var id = await _loanApprovalRepository.CreateLoanApprovalAsync(loanApproval);
+            loanApproval.Id = id;
+            return CreatedAtAction(nameof(GetLoanApprovalByIdAsync), new { id = id }, loanApproval);
+        }
+
+        [HttpPut]
+        [Route("api/loanApproval/{id}")]
+        public async Task<ActionResult<LoanApprovalModel>> UpdateLoanApprovalAsync(int id, [FromBody]LoanApprovalModel loanApproval)
+        {
+            // Perform credit check and pre-qualification.
+            // Assess the value of the vehicle.
+            // Check if the applicant has accepted the loan offer.
+            // Disburse the approved loan amount.
+            var result = await _loanApprovalRepository.UpdateLoanApprovalAsync(loanApproval);
+            if (result == 0)
+            {
+                return NotFound();
+            }
+            return loanApproval;
         }
     }
 }
