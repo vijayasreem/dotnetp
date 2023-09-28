@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using dotnetp.DTO;
@@ -20,24 +19,28 @@ namespace dotnetp
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = @"INSERT INTO LoanApprovalModels (ValidIdentification, ProofOfIncome, CreditHistory, EmploymentDetails, LoanAmount, InterestRate, VehicleValue, LoanOfferAccepted, DisbursementDate)
-                                VALUES (@ValidIdentification, @ProofOfIncome, @CreditHistory, @EmploymentDetails, @LoanAmount, @InterestRate, @VehicleValue, @LoanOfferAccepted, @DisbursementDate);
-                                SELECT CAST(SCOPE_IDENTITY() AS INT);";
-                
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@ValidIdentification", loanApprovalModel.ValidIdentification);
-                command.Parameters.AddWithValue("@ProofOfIncome", loanApprovalModel.ProofOfIncome);
-                command.Parameters.AddWithValue("@CreditHistory", loanApprovalModel.CreditHistory);
-                command.Parameters.AddWithValue("@EmploymentDetails", loanApprovalModel.EmploymentDetails);
-                command.Parameters.AddWithValue("@LoanAmount", loanApprovalModel.LoanAmount);
-                command.Parameters.AddWithValue("@InterestRate", loanApprovalModel.InterestRate);
-                command.Parameters.AddWithValue("@VehicleValue", loanApprovalModel.VehicleValue);
-                command.Parameters.AddWithValue("@LoanOfferAccepted", loanApprovalModel.LoanOfferAccepted);
-                command.Parameters.AddWithValue("@DisbursementDate", loanApprovalModel.DisbursementDate);
-
                 await connection.OpenAsync();
-                int id = (int)await command.ExecuteScalarAsync();
-                return id;
+
+                string query = "INSERT INTO LoanApprovalModels (ValidIdentification, ProofOfIncome, CreditHistory, EmploymentDetails, CreditCheckPerformed, LoanAmount, InterestRateRange, VehicleAssessmentRequired, VehicleValue, LoanOfferAccepted, LoanDisbursed) " +
+                               "VALUES (@ValidIdentification, @ProofOfIncome, @CreditHistory, @EmploymentDetails, @CreditCheckPerformed, @LoanAmount, @InterestRateRange, @VehicleAssessmentRequired, @VehicleValue, @LoanOfferAccepted, @LoanDisbursed);" +
+                               "SELECT CAST(SCOPE_IDENTITY() AS INT)";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ValidIdentification", loanApprovalModel.ValidIdentification);
+                    command.Parameters.AddWithValue("@ProofOfIncome", loanApprovalModel.ProofOfIncome);
+                    command.Parameters.AddWithValue("@CreditHistory", loanApprovalModel.CreditHistory);
+                    command.Parameters.AddWithValue("@EmploymentDetails", loanApprovalModel.EmploymentDetails);
+                    command.Parameters.AddWithValue("@CreditCheckPerformed", loanApprovalModel.CreditCheckPerformed);
+                    command.Parameters.AddWithValue("@LoanAmount", loanApprovalModel.LoanAmount);
+                    command.Parameters.AddWithValue("@InterestRateRange", loanApprovalModel.InterestRateRange);
+                    command.Parameters.AddWithValue("@VehicleAssessmentRequired", loanApprovalModel.VehicleAssessmentRequired);
+                    command.Parameters.AddWithValue("@VehicleValue", loanApprovalModel.VehicleValue);
+                    command.Parameters.AddWithValue("@LoanOfferAccepted", loanApprovalModel.LoanOfferAccepted);
+                    command.Parameters.AddWithValue("@LoanDisbursed", loanApprovalModel.LoanDisbursed);
+
+                    return (int)await command.ExecuteScalarAsync();
+                }
             }
         }
 
@@ -45,75 +48,81 @@ namespace dotnetp
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT * FROM LoanApprovalModels WHERE Id = @Id;";
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@Id", id);
-
                 await connection.OpenAsync();
-                SqlDataReader reader = await command.ExecuteReaderAsync();
 
-                if (await reader.ReadAsync())
+                string query = "SELECT * FROM LoanApprovalModels WHERE Id = @Id";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    LoanApprovalModel loanApprovalModel = MapReaderToLoanApprovalModel(reader);
-                    return loanApprovalModel;
-                }
+                    command.Parameters.AddWithValue("@Id", id);
 
-                return null;
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            return MapLoanApprovalModelFromReader(reader);
+                        }
+                    }
+                }
             }
+
+            return null;
         }
 
         public async Task<List<LoanApprovalModel>> GetAllAsync()
         {
+            List<LoanApprovalModel> loanApprovalModels = new List<LoanApprovalModel>();
+
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT * FROM LoanApprovalModels;";
-                SqlCommand command = new SqlCommand(query, connection);
-
                 await connection.OpenAsync();
-                SqlDataReader reader = await command.ExecuteReaderAsync();
 
-                List<LoanApprovalModel> loanApprovalModels = new List<LoanApprovalModel>();
+                string query = "SELECT * FROM LoanApprovalModels";
 
-                while (await reader.ReadAsync())
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    LoanApprovalModel loanApprovalModel = MapReaderToLoanApprovalModel(reader);
-                    loanApprovalModels.Add(loanApprovalModel);
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            LoanApprovalModel loanApprovalModel = MapLoanApprovalModelFromReader(reader);
+                            loanApprovalModels.Add(loanApprovalModel);
+                        }
+                    }
                 }
-
-                return loanApprovalModels;
             }
+
+            return loanApprovalModels;
         }
 
         public async Task UpdateAsync(LoanApprovalModel loanApprovalModel)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = @"UPDATE LoanApprovalModels SET 
-                                ValidIdentification = @ValidIdentification,
-                                ProofOfIncome = @ProofOfIncome,
-                                CreditHistory = @CreditHistory,
-                                EmploymentDetails = @EmploymentDetails,
-                                LoanAmount = @LoanAmount,
-                                InterestRate = @InterestRate,
-                                VehicleValue = @VehicleValue,
-                                LoanOfferAccepted = @LoanOfferAccepted,
-                                DisbursementDate = @DisbursementDate
-                                WHERE Id = @Id;";
-
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@ValidIdentification", loanApprovalModel.ValidIdentification);
-                command.Parameters.AddWithValue("@ProofOfIncome", loanApprovalModel.ProofOfIncome);
-                command.Parameters.AddWithValue("@CreditHistory", loanApprovalModel.CreditHistory);
-                command.Parameters.AddWithValue("@EmploymentDetails", loanApprovalModel.EmploymentDetails);
-                command.Parameters.AddWithValue("@LoanAmount", loanApprovalModel.LoanAmount);
-                command.Parameters.AddWithValue("@InterestRate", loanApprovalModel.InterestRate);
-                command.Parameters.AddWithValue("@VehicleValue", loanApprovalModel.VehicleValue);
-                command.Parameters.AddWithValue("@LoanOfferAccepted", loanApprovalModel.LoanOfferAccepted);
-                command.Parameters.AddWithValue("@DisbursementDate", loanApprovalModel.DisbursementDate);
-                command.Parameters.AddWithValue("@Id", loanApprovalModel.Id);
-
                 await connection.OpenAsync();
-                await command.ExecuteNonQueryAsync();
+
+                string query = "UPDATE LoanApprovalModels SET ValidIdentification = @ValidIdentification, ProofOfIncome = @ProofOfIncome, CreditHistory = @CreditHistory, " +
+                               "EmploymentDetails = @EmploymentDetails, CreditCheckPerformed = @CreditCheckPerformed, LoanAmount = @LoanAmount, InterestRateRange = @InterestRateRange, " +
+                               "VehicleAssessmentRequired = @VehicleAssessmentRequired, VehicleValue = @VehicleValue, LoanOfferAccepted = @LoanOfferAccepted, LoanDisbursed = @LoanDisbursed " +
+                               "WHERE Id = @Id";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ValidIdentification", loanApprovalModel.ValidIdentification);
+                    command.Parameters.AddWithValue("@ProofOfIncome", loanApprovalModel.ProofOfIncome);
+                    command.Parameters.AddWithValue("@CreditHistory", loanApprovalModel.CreditHistory);
+                    command.Parameters.AddWithValue("@EmploymentDetails", loanApprovalModel.EmploymentDetails);
+                    command.Parameters.AddWithValue("@CreditCheckPerformed", loanApprovalModel.CreditCheckPerformed);
+                    command.Parameters.AddWithValue("@LoanAmount", loanApprovalModel.LoanAmount);
+                    command.Parameters.AddWithValue("@InterestRateRange", loanApprovalModel.InterestRateRange);
+                    command.Parameters.AddWithValue("@VehicleAssessmentRequired", loanApprovalModel.VehicleAssessmentRequired);
+                    command.Parameters.AddWithValue("@VehicleValue", loanApprovalModel.VehicleValue);
+                    command.Parameters.AddWithValue("@LoanOfferAccepted", loanApprovalModel.LoanOfferAccepted);
+                    command.Parameters.AddWithValue("@LoanDisbursed", loanApprovalModel.LoanDisbursed);
+                    command.Parameters.AddWithValue("@Id", loanApprovalModel.Id);
+
+                    await command.ExecuteNonQueryAsync();
+                }
             }
         }
 
@@ -121,30 +130,36 @@ namespace dotnetp
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "DELETE FROM LoanApprovalModels WHERE Id = @Id;";
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@Id", id);
-
                 await connection.OpenAsync();
-                await command.ExecuteNonQueryAsync();
+
+                string query = "DELETE FROM LoanApprovalModels WHERE Id = @Id";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    await command.ExecuteNonQueryAsync();
+                }
             }
         }
 
-        private LoanApprovalModel MapReaderToLoanApprovalModel(SqlDataReader reader)
+        private LoanApprovalModel MapLoanApprovalModelFromReader(SqlDataReader reader)
         {
-            LoanApprovalModel loanApprovalModel = new LoanApprovalModel();
-            loanApprovalModel.Id = (int)reader["Id"];
-            loanApprovalModel.ValidIdentification = (string)reader["ValidIdentification"];
-            loanApprovalModel.ProofOfIncome = (string)reader["ProofOfIncome"];
-            loanApprovalModel.CreditHistory = (string)reader["CreditHistory"];
-            loanApprovalModel.EmploymentDetails = (string)reader["EmploymentDetails"];
-            loanApprovalModel.LoanAmount = (decimal)reader["LoanAmount"];
-            loanApprovalModel.InterestRate = (decimal)reader["InterestRate"];
-            loanApprovalModel.VehicleValue = (string)reader["VehicleValue"];
-            loanApprovalModel.LoanOfferAccepted = (bool)reader["LoanOfferAccepted"];
-            loanApprovalModel.DisbursementDate = (DateTime)reader["DisbursementDate"];
-
-            return loanApprovalModel;
+            return new LoanApprovalModel
+            {
+                Id = (int)reader["Id"],
+                ValidIdentification = reader["ValidIdentification"].ToString(),
+                ProofOfIncome = reader["ProofOfIncome"].ToString(),
+                CreditHistory = reader["CreditHistory"].ToString(),
+                EmploymentDetails = reader["EmploymentDetails"].ToString(),
+                CreditCheckPerformed = (bool)reader["CreditCheckPerformed"],
+                LoanAmount = (decimal)reader["LoanAmount"],
+                InterestRateRange = (decimal)reader["InterestRateRange"],
+                VehicleAssessmentRequired = (bool)reader["VehicleAssessmentRequired"],
+                VehicleValue = (decimal)reader["VehicleValue"],
+                LoanOfferAccepted = (bool)reader["LoanOfferAccepted"],
+                LoanDisbursed = (bool)reader["LoanDisbursed"]
+            };
         }
     }
 }

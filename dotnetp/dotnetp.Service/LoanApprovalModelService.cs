@@ -1,52 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using dotnetp.DataAccess;
 using dotnetp.DTO;
 
 namespace dotnetp.Service
 {
-    public class LoanApprovalModelService : ILoanApprovalModelRepository
+    public class LoanApprovalModelService : ILoanApprovalModelService
     {
-        private readonly ILoanApprovalModelDataAccess _dataAccess;
+        private readonly ILoanApprovalModelRepository _repository;
 
-        public LoanApprovalModelService(ILoanApprovalModelDataAccess dataAccess)
+        public LoanApprovalModelService(ILoanApprovalModelRepository repository)
         {
-            _dataAccess = dataAccess;
+            _repository = repository;
         }
 
         public async Task<int> CreateAsync(LoanApprovalModel loanApprovalModel)
         {
-            // Perform validation and business logic before creating the loan approval model
-            // ...
-
-            return await _dataAccess.CreateAsync(loanApprovalModel);
+            return await _repository.CreateAsync(loanApprovalModel);
         }
 
         public async Task<LoanApprovalModel> GetByIdAsync(int id)
         {
-            return await _dataAccess.GetByIdAsync(id);
+            return await _repository.GetByIdAsync(id);
         }
 
         public async Task<List<LoanApprovalModel>> GetAllAsync()
         {
-            return await _dataAccess.GetAllAsync();
+            return await _repository.GetAllAsync();
         }
 
         public async Task UpdateAsync(LoanApprovalModel loanApprovalModel)
         {
-            // Perform validation and business logic before updating the loan approval model
-            // ...
-
-            await _dataAccess.UpdateAsync(loanApprovalModel);
+            await _repository.UpdateAsync(loanApprovalModel);
         }
 
         public async Task DeleteAsync(int id)
         {
-            // Perform validation and business logic before deleting the loan approval model
-            // ...
-
-            await _dataAccess.DeleteAsync(id);
+            await _repository.DeleteAsync(id);
         }
     }
 }

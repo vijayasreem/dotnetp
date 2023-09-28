@@ -7,49 +7,57 @@ using System.Threading.Tasks;
 
 namespace dotnetp.API
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class LoanApprovalController : ControllerBase
     {
-        private readonly ILoanApprovalModelRepository _loanApprovalModelRepository;
+        private readonly ILoanApprovalModelService _loanApprovalService;
 
-        public LoanApprovalController(ILoanApprovalModelRepository loanApprovalModelRepository)
+        public LoanApprovalController(ILoanApprovalModelService loanApprovalService)
         {
-            _loanApprovalModelRepository = loanApprovalModelRepository;
+            _loanApprovalService = loanApprovalService;
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateAsync(LoanApprovalModel loanApprovalModel)
         {
-            await _loanApprovalModelRepository.CreateAsync(loanApprovalModel);
+            await _loanApprovalService.CreateAsync(loanApprovalModel);
             return Ok();
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<ActionResult<LoanApprovalModel>> GetByIdAsync(int id)
         {
-            var loanApprovalModel = await _loanApprovalModelRepository.GetByIdAsync(id);
-            return Ok(loanApprovalModel);
+            var loanApprovalModel = await _loanApprovalService.GetByIdAsync(id);
+            if (loanApprovalModel == null)
+            {
+                return NotFound();
+            }
+            return loanApprovalModel;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<ActionResult<List<LoanApprovalModel>>> GetAllAsync()
         {
-            var loanApprovalModels = await _loanApprovalModelRepository.GetAllAsync();
-            return Ok(loanApprovalModels);
+            var loanApprovalModels = await _loanApprovalService.GetAllAsync();
+            return loanApprovalModels;
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateAsync(LoanApprovalModel loanApprovalModel)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateAsync(int id, LoanApprovalModel loanApprovalModel)
         {
-            await _loanApprovalModelRepository.UpdateAsync(loanApprovalModel);
+            if (id != loanApprovalModel.Id)
+            {
+                return BadRequest();
+            }
+            await _loanApprovalService.UpdateAsync(loanApprovalModel);
             return Ok();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            await _loanApprovalModelRepository.DeleteAsync(id);
+            await _loanApprovalService.DeleteAsync(id);
             return Ok();
         }
     }
